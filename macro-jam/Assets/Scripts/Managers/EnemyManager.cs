@@ -2,8 +2,18 @@ using System.Collections.Generic;
 using System;
 using UnityEngine;
 
+[Serializable]
+public enum EnemyType 
+{
+    Blue,
+    Red,
+    Green,
+    Orange
+}
+
 public class EnemyManager : MonoBehaviour
 {
+
     [Serializable]
     public class EnemyPool
     {
@@ -22,7 +32,6 @@ public class EnemyManager : MonoBehaviour
     [SerializeField]
     private List<EnemyPool> enemyPoolList;
 
-
     [SerializeField]
     private Transform enemyContainer;
 
@@ -30,22 +39,27 @@ public class EnemyManager : MonoBehaviour
     private List<Transform> spawnPoints;
 
     [SerializeField]
-    private List<Collider> directionPoints;
+    private List<Collider2D> directionPoints;
 
     [SerializeField]
+    [Tooltip("Enemies per second")]
     private float generationRate;
 
     #endregion
 
     private GamePlayManager gamePlayManager;
+    private ProjectileManager projectileManager;
+    private Transform targetTr;
     private bool isGenerating = false;
     private float currentTime = 0;
 
     public static event Action OnGameOver;
 
-    public void SetUp(GamePlayManager gpManager)
+    public void SetUp(GamePlayManager gpManager, ProjectileManager projManager, Transform target)
     {
         gamePlayManager = gpManager;
+        projectileManager = projManager;
+        targetTr = target;
     }
 
     public void StartGame()
@@ -65,11 +79,21 @@ public class EnemyManager : MonoBehaviour
                 EnemyController enemy = Instantiate(pool.enemyController, enemyContainer.position, Quaternion.identity, enemyContainer);
                 enemy.gameObject.SetActive(false);
                 pool.inactiveEnemies.Add(enemy);
-                enemy.SetUpEnemy(this, directionPoints, poolGroup);
+                enemy.SetUpEnemy(this, projectileManager, directionPoints, poolGroup, targetTr);
             }
 
             poolGroup++;
         }
+    }
+
+    private void OnEnable()
+    {
+        GamePlayManager.OnGameOver += GameOver;
+    }
+
+    private void OnDisable()
+    {
+        GamePlayManager.OnGameOver -= GameOver;
     }
 
     private void Update()
@@ -78,8 +102,9 @@ public class EnemyManager : MonoBehaviour
             return;
 
         currentTime += Time.deltaTime;
+        float generationInterval = 1f / generationRate;
 
-        if (currentTime >= generationRate)
+        if (currentTime >= generationInterval)
         {
             SpawnEnemy();
             currentTime = 0;
@@ -98,7 +123,7 @@ public class EnemyManager : MonoBehaviour
 
         EnemyController enemy = enemyPoolList[rndEnemy].inactiveEnemies[0];
 
-        Vector3 newPos = spawnPoints[rndSpawnPoint].position;
+        Vector2 newPos = spawnPoints[rndSpawnPoint].position;
 
         enemy.StartEnemy(newPos);
         enemyPoolList[rndEnemy].inactiveEnemies.Remove(enemy);

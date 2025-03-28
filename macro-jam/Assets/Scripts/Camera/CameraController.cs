@@ -11,7 +11,7 @@ public class CameraController : MonoBehaviour
     }
 
     [SerializeField]
-    private float defaultFOV;
+    private float defaultSize;
 
     [SerializeField]
     private Resolution defaultResolution;
@@ -30,9 +30,12 @@ public class CameraController : MonoBehaviour
         AdjustCameraFOV();
     }
 
+
     void AdjustCameraFOV()
     {
         float currentAspect = (float)Screen.width / Screen.height;
-        cam.fieldOfView = defaultFOV * (defaultAspect / currentAspect);
+
+        // Adjust orthographic size instead of FOV
+        cam.orthographicSize = defaultSize * (currentAspect / defaultAspect);
     }
 }

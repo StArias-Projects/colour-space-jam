@@ -46,6 +46,16 @@ public class HUDManager : MonoBehaviour
     }
 
 
+    private void OnEnable()
+    {
+        GamePlayManager.OnGameOver += GameOver;
+    }
+
+    private void OnDisable()
+    {
+        GamePlayManager.OnGameOver -= GameOver;
+    }
+
     public void UpdateHealth(float health)
     {
         healthBar.value = health;

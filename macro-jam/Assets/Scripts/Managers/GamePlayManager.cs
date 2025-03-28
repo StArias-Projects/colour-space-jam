@@ -1,6 +1,5 @@
 using System;
 using UnityEngine;
-using static GamePlayManager;
 
 public class GamePlayManager : MonoBehaviour
 {
@@ -15,10 +14,16 @@ public class GamePlayManager : MonoBehaviour
     #region Editor Variables
 
     [SerializeField]
+    private PlayerManager playerManager;
+
+    [SerializeField]
     private EnemyManager enemyManager;
 
     [SerializeField]
     private HUDManager hudManager;
+    
+    [SerializeField]
+    private ProjectileManager projectileManager;
     
     [SerializeField]
     private CameraController cameraController;
@@ -46,12 +51,16 @@ public class GamePlayManager : MonoBehaviour
 
     #endregion
 
+    public static Action OnGameOver;
+
     #region Unity Callbacks
 
     void Awake()
     {
-        hudManager.SetUp(this, 100);
-        enemyManager.SetUp(this);
+        playerManager.SetUp(this);
+        hudManager.SetUp(this, playerManager.GetMaxHealth());
+        enemyManager.SetUp(this, projectileManager, playerManager.transform);
+        projectileManager.SetUp();
         cameraController.SetUp(this);
     }
 
@@ -103,8 +112,8 @@ public class GamePlayManager : MonoBehaviour
     {
         ChangeGameState(GameState.GameOver);
         currentSpeed = 0;
-        enemyManager.GameOver();
-        hudManager.GameOver();
+
+        OnGameOver?.Invoke();
     }
 
     public void PauseGame() 
@@ -125,5 +134,10 @@ public class GamePlayManager : MonoBehaviour
     public void RestartGame()
     {
         GameManager.GetInstance().ChangeScene(1);
+    }
+
+    public void UpdateHealth(float health)
+    {
+        hudManager.UpdateHealth(health);
     }
 }

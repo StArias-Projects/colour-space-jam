@@ -6,6 +6,12 @@ using System.Linq;
 public class EnemyController : MonoBehaviour
 {
     [SerializeField]
+    private EnemyType enemyType;
+
+    [SerializeField]
+    private EnemyWeaponController weaponController;
+
+    [SerializeField]
     [Min(0)]
     private float maxHealth;
 
@@ -14,10 +20,8 @@ public class EnemyController : MonoBehaviour
     private float maxSpeed;
 
     [SerializeField]
-    private Rigidbody rb;
+    private Rigidbody2D rigidBody;
 
-    [SerializeField]
-    private LayerMask playerMask;
 
     private int poolGroup;
     private int currentDirIndex = -1;
@@ -25,37 +29,45 @@ public class EnemyController : MonoBehaviour
     private float health = 0;
     private float currentSpeed = 0;
 
-    private Vector3 movementDir = Vector3.zero;
+    private Vector2 movementDir = Vector2.zero;
 
-    private List<Collider> directionPoints = new List<Collider>();
+    private List<Collider2D> directionPoints = new List<Collider2D>();
 
     private EnemyManager enemyManager;
 
-    public void SetUpEnemy(EnemyManager manager, List<Collider> dirPoints, int group)
+    #region Set Up
+
+    public void SetUpEnemy(EnemyManager manager, ProjectileManager projManager, List<Collider2D> dirPoints, int group, Transform targetTr)
     {
         enemyManager = manager;
         health = maxHealth;
         poolGroup = group;
         currentSpeed = maxSpeed;
+
         SetUpDirectionPoints(dirPoints);
+        weaponController.SetUpWeapon(this, projManager, targetTr);
     }
 
-    private void SetUpDirectionPoints(List<Collider> dirPoints)
+    private void SetUpDirectionPoints(List<Collider2D> dirPoints)
     {
         int maxDirPoints = UnityEngine.Random.Range(2, dirPoints.Count);
         directionPoints = dirPoints.OrderBy(x => UnityEngine.Random.value).Take(maxDirPoints).ToList();
     }
+
+    #endregion
 
     #region Unity Callbacks
 
     private void OnEnable()
     {
         EnemyManager.OnGameOver += OnGameOver;
+        Projectile.OnEnemyHit += ReceiveDamage;
     }
 
     private void OnDisable()
     {
         EnemyManager.OnGameOver -= OnGameOver;
+        Projectile.OnEnemyHit -= ReceiveDamage;
     }
 
     private void FixedUpdate()
@@ -63,19 +75,24 @@ public class EnemyController : MonoBehaviour
         if (enemyManager.GetGameState() != GamePlayManager.GameState.Playing)
             return;
 
-        rb.linearVelocity = currentSpeed * movementDir;
+        rigidBody.linearVelocity = currentSpeed * movementDir;
     }
 
-    private void OnTriggerEnter(Collider other)
+    private void OnTriggerEnter2D(Collider2D collision)
     {
         if (currentDirIndex >= 0 && currentDirIndex < directionPoints.Count
-            && other.gameObject == directionPoints[currentDirIndex].gameObject)
+            && collision.gameObject == directionPoints[currentDirIndex].gameObject)
         {
             ChangeMovementDirection();
         }
     }
 
     #endregion
+
+    public EnemyType GetEnemyType()
+    {
+        return enemyType;
+    }
 
     public void ChangeMovementDirection()
     {
@@ -91,19 +108,17 @@ public class EnemyController : MonoBehaviour
         return poolGroup;
     }
 
-    public bool ReceiveDamage(float damage)
+    public void ReceiveDamage(float damage)
     {
         health -= damage;
         if (health <= 0)
         {
+            health = 0;
             enemyManager.ResetEnemy(this);
-            return true;
         }
-
-        return false;
     }
 
-    public void StartEnemy(Vector3 position)
+    public void StartEnemy(Vector2 position)
     {
         currentSpeed = maxSpeed;
         gameObject.SetActive(true);
@@ -114,6 +129,6 @@ public class EnemyController : MonoBehaviour
 
     public void OnGameOver()
     {
-        currentSpeed = 0;
+        Destroy(gameObject);
     }
 }
