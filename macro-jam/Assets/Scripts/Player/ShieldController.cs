@@ -1,8 +1,12 @@
 using UnityEngine;
+using static UnityEngine.InputSystem.InputAction;
 
 public class ShieldController : MonoBehaviour
 {
     [SerializeField] private float rotationSpeed = 5f;
+
+    [SerializeField]
+    private Transform clickRotator;
 
     private PlayerManager _player;
 
@@ -28,5 +32,14 @@ public class ShieldController : MonoBehaviour
         // Rotación suavizada
         float smoothAngle = Mathf.LerpAngle(transform.rotation.eulerAngles.z, targetAngle, rotationSpeed * Time.deltaTime);
         transform.rotation = Quaternion.Euler(0, 0, smoothAngle);
+    }
+
+    public void OnClick(CallbackContext context)
+    {
+        if (context.started)
+        {
+            clickRotator.Rotate(new Vector3(0, 0, -90));
+        }
+        
     }
 }

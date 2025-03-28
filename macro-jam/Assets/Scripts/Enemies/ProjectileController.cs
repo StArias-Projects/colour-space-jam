@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class ProjectileController : MonoBehaviour
 {
@@ -32,6 +33,7 @@ public class ProjectileController : MonoBehaviour
 
     public static event Action<float> OnPlayerHit;
     public static event Action<float> OnEnemyHit;
+
 
     public void SetUp(ProjectileManager manager, EnemyType type)
     {
@@ -78,6 +80,16 @@ public class ProjectileController : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        if(collision.TryGetComponent(out Shield shieldHit))
+        {
+            if(shieldHit.color == enemyType)
+            {
+                projDir = shieldHit.transform.up;
+                speed = 8;
+
+                //do bullet vfx and maybe change to white bullet to indicate it can hit any enemy color now
+            }
+        }
         int mask = 1 << collision.gameObject.layer;
 
         if ((mask & playerMask.value) != 0)

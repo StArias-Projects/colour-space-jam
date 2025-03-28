@@ -62,6 +62,9 @@ public class EnemyManager : MonoBehaviour
         targetTr = target;
 
         GenerateEnemies();
+        
+        //just for fast testing
+        SpawnEnemy();
     }
 
     public void StartGame()
