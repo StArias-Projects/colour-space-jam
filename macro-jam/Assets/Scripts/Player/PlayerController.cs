@@ -1,6 +1,7 @@
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using static UnityEngine.InputSystem.InputAction;
 
 public class PlayerController : MonoBehaviour
 {
@@ -17,17 +18,18 @@ public class PlayerController : MonoBehaviour
 		_player = player;
 	}
 
-    private void OnMove(InputValue value)
-	{
-		if(_player == null || _player.GetGameState() != GamePlayManager.GameState.Playing)
+    public void OnMove(CallbackContext value)
+    {
+        if (_player == null || _player.GetGameState() != GamePlayManager.GameState.Playing)
             return;
 
-        _input = value.Get<Vector2>();
-		Debug.Log(_input);
-	}
+        _input = value.ReadValue<Vector2>();
+        Debug.Log(_input);
+    }
 
 	private void FixedUpdate()
 	{
-		_rb.linearVelocity = _input * currentSpeed;
-	}
+		_rb.AddForce(_input * currentSpeed, ForceMode2D.Impulse);
+
+    }
 }
