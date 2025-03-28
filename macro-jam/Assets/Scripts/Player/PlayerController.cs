@@ -1,25 +1,33 @@
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
-	private Vector2 _input;
 	[SerializeField] private Rigidbody2D _rb;
-	[SerializeField] private float _speed = 0.5f;
+	[SerializeField] private float _maxSpeed = 0.5f;
 
-	private void Awake()
+	private Vector2 _input;
+	private float currentSpeed = 0;
+	private PlayerManager _player;
+
+    public void SetUp(PlayerManager player) 
 	{
-		_rb = GetComponent<Rigidbody2D>();
+		currentSpeed = _maxSpeed;
+		_player = player;
 	}
 
-	private void OnMove(InputValue value)
+    private void OnMove(InputValue value)
 	{
-		_input = value.Get<Vector2>();
+		if(_player == null || _player.GetGameState() != GamePlayManager.GameState.Playing)
+            return;
+
+        _input = value.Get<Vector2>();
 		Debug.Log(_input);
 	}
 
 	private void FixedUpdate()
 	{
-		_rb.linearVelocity = _input * _speed;
+		_rb.linearVelocity = _input * currentSpeed;
 	}
 }

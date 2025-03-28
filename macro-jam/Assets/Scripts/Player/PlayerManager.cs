@@ -5,24 +5,32 @@ public class PlayerManager : MonoBehaviour
     [SerializeField]
     private float maxHealth;
 
+    [SerializeField]
+    private PlayerController playerController;
+
+    [SerializeField]
+    private ShieldController shieldController;
 
     private float health = 0;
     private GamePlayManager gamePlayManager;
 
     public void SetUp(GamePlayManager gpManager) 
     {
-        gamePlayManager = gpManager;    
+        health = maxHealth;
+        gamePlayManager = gpManager;
+        playerController.SetUp(this);
+        shieldController.SetUp(this);
     }
 
     private void OnEnable()
     {
-        Projectile.OnPlayerHit += ReceiveDamage;
+        ProjectileController.OnPlayerHit += ReceiveDamage;
         GamePlayManager.OnGameOver += GameOver;
     }
 
     private void OnDisable()
     {
-        Projectile.OnPlayerHit -= ReceiveDamage;
+        ProjectileController.OnPlayerHit -= ReceiveDamage;
         GamePlayManager.OnGameOver -= GameOver;
     }
 
@@ -36,6 +44,11 @@ public class PlayerManager : MonoBehaviour
     public float GetMaxHealth()
     {
         return maxHealth;
+    }
+
+    public GamePlayManager.GameState GetGameState()
+    {
+        return gamePlayManager.GetGameState();
     }
 
     #endregion

@@ -55,7 +55,7 @@ public class EnemyWeaponController : MonoBehaviour
 
     private void Shoot(Vector2 dir)
     {
-        Projectile proj = projectileManager.GetProjectile(enemyController.GetEnemyType());
+        ProjectileController proj = projectileManager.GetProjectile(enemyController.GetEnemyType());
         if (!proj)
             return;
 

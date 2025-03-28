@@ -53,6 +53,12 @@ MonoBehaviour:
   maxHealth: 100
   maxSpeed: 2
   rigidBody: {fileID: 4764819185033694145}
+  playerMask:
+    serializedVersion: 2
+    m_Bits: 256
+  shieldMask:
+    serializedVersion: 2
+    m_Bits: 512
 --- !u!50 &4764819185033694145
 Rigidbody2D:
   serializedVersion: 5
@@ -72,7 +78,7 @@ Rigidbody2D:
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 64
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -142,7 +148,7 @@ BoxCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0

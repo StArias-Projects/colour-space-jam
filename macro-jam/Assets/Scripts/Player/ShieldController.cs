@@ -2,24 +2,27 @@ using UnityEngine;
 
 public class ShieldController : MonoBehaviour
 {
-    private Transform _player;
+    [SerializeField] private float rotationSpeed = 5f;
 
-    [SerializeField] private float rotationSpeed = 5f; // Velocidad de giro (editable desde el Inspector)
+    private PlayerManager _player;
 
-    private void Start()
+    public void SetUp(PlayerManager player) 
     {
-        _player = transform.parent; // El Player es el padre del ShieldParent
+        _player = player;    
     }
 
     private void Update()
     {
+        if (_player.GetGameState() != GamePlayManager.GameState.Playing)
+            return;
+
         RotateShields();
     }
 
     void RotateShields()
     {
         Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        Vector2 direction = (mousePosition - _player.position).normalized;
+        Vector2 direction = (mousePosition - _player.transform.position).normalized;
         float targetAngle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
 
         // Rotación suavizada

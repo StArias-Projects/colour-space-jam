@@ -22,6 +22,11 @@ public class EnemyController : MonoBehaviour
     [SerializeField]
     private Rigidbody2D rigidBody;
 
+    [SerializeField]
+    private LayerMask playerMask;
+
+    [SerializeField]
+    private LayerMask shieldMask;
 
     private int poolGroup;
     private int currentDirIndex = -1;
@@ -61,13 +66,13 @@ public class EnemyController : MonoBehaviour
     private void OnEnable()
     {
         EnemyManager.OnGameOver += OnGameOver;
-        Projectile.OnEnemyHit += ReceiveDamage;
+        ProjectileController.OnEnemyHit += ReceiveDamage;
     }
 
     private void OnDisable()
     {
         EnemyManager.OnGameOver -= OnGameOver;
-        Projectile.OnEnemyHit -= ReceiveDamage;
+        ProjectileController.OnEnemyHit -= ReceiveDamage;
     }
 
     private void FixedUpdate()
@@ -80,9 +85,11 @@ public class EnemyController : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        Debug.Log("TRIGGER 2D " + collision.gameObject.name);
-        if (currentDirIndex >= 0 && currentDirIndex < directionPoints.Count
-            && collision.gameObject == directionPoints[currentDirIndex].gameObject)
+        int mask = 1 << collision.gameObject.layer;
+        if (currentDirIndex >= 0 && currentDirIndex < directionPoints.Count && 
+            (collision.gameObject == directionPoints[currentDirIndex].gameObject
+            || (mask & playerMask.value) != 0
+            || (mask & shieldMask.value) != 0))
         {
             ChangeMovementDirection();
         }

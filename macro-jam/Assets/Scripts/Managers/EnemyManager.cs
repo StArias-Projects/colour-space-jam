@@ -30,20 +30,20 @@ public class EnemyManager : MonoBehaviour
     #region Editor Variables
 
     [SerializeField]
-    private List<EnemyPool> enemyPoolList;
+    [Tooltip("Enemies per second")]
+    private float generationRate;
 
     [SerializeField]
     private Transform enemyContainer;
+
+    [SerializeField]
+    private List<EnemyPool> enemyPoolList;
 
     [SerializeField]
     private List<Transform> spawnPoints;
 
     [SerializeField]
     private List<Collider2D> directionPoints;
-
-    [SerializeField]
-    [Tooltip("Enemies per second")]
-    private float generationRate;
 
     #endregion
 
@@ -60,12 +60,13 @@ public class EnemyManager : MonoBehaviour
         gamePlayManager = gpManager;
         projectileManager = projManager;
         targetTr = target;
+
+        GenerateEnemies();
     }
 
     public void StartGame()
     {
         isGenerating = true;
-        GenerateEnemies();
     }
 
     public void GenerateEnemies()

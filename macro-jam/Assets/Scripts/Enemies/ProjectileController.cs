@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-public class Projectile : MonoBehaviour
+public class ProjectileController : MonoBehaviour
 {
     [SerializeField]
     private Rigidbody2D rigidBody;
@@ -15,10 +15,20 @@ public class Projectile : MonoBehaviour
     [SerializeField]
     private float attackPower;
 
+    [SerializeField]
+    private LayerMask playerMask;
+
+    [SerializeField]
+    private LayerMask shieldMask;
+
+    [SerializeField]
+    private LayerMask enemyMask;
+
     private float currentLifeTime = 0;
     private ProjectileManager projectileManager;
     private Vector2 projDir;
     private EnemyType enemyType;
+    private bool isBounced = false;
 
     public static event Action<float> OnPlayerHit;
     public static event Action<float> OnEnemyHit;
@@ -66,14 +76,15 @@ public class Projectile : MonoBehaviour
             projectileManager.ResetProjectile(this, enemyType);
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        
-    }
-
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        
+        int mask = 1 << collision.gameObject.layer;
+
+        if ((mask & playerMask.value) != 0)
+        {
+            OnPlayerHit?.Invoke(attackPower);
+            projectileManager.ResetProjectile(this, enemyType);
+        }
     }
 
     public void ShootProjectile(Vector2 pos, Vector2 dir)

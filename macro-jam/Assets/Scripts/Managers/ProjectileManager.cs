@@ -8,13 +8,13 @@ public class ProjectileManager : MonoBehaviour
     [Serializable]
     public class ProjectileAttributes
     {
-        public Projectile projectilePrefab;
+        public ProjectileController projectilePrefab;
         public int maxSizePool;
         public Transform projectilePool;
         public EnemyType enemyType;
 
         [HideInInspector]
-        public List<Projectile> inactiveProjectiles = new List<Projectile>();
+        public List<ProjectileController> inactiveProjectiles = new List<ProjectileController>();
     }
 
     [SerializeField]
@@ -28,6 +28,13 @@ public class ProjectileManager : MonoBehaviour
 
     public void SetUp()
     {
+        projectileDict = new Dictionary<EnemyType, ProjectileAttributes>();
+
+        foreach (var projectile in projectileList)
+        {
+            projectileDict[projectile.enemyType] = projectile;
+        }
+
         GenerateProjectiles();
     }
 
@@ -41,7 +48,7 @@ public class ProjectileManager : MonoBehaviour
             {
                 Vector2 positionToSpawn = Vector2.zero;
 
-                Projectile projectile = Instantiate(projectileAttr.projectilePrefab, projectileAttr.projectilePool.position, Quaternion.identity, projectileAttr.projectilePool);
+                ProjectileController projectile = Instantiate(projectileAttr.projectilePrefab, projectileAttr.projectilePool.position, Quaternion.identity, projectileAttr.projectilePool);
                 projectile.gameObject.SetActive(false);
                 projectileAttr.inactiveProjectiles.Add(projectile);
                 projectile.SetUp(this, enemyType);
@@ -52,16 +59,6 @@ public class ProjectileManager : MonoBehaviour
     #endregion
 
     #region Unity Callbacks
-
-    private void Awake()
-    {
-        projectileDict = new Dictionary<EnemyType, ProjectileAttributes>();
-
-        foreach (var projectile in projectileList)
-        {
-            projectileDict[projectile.enemyType] = projectile;
-        }
-    }
 
     private void OnEnable()
     {
@@ -75,19 +72,19 @@ public class ProjectileManager : MonoBehaviour
 
     #endregion
 
-    public Projectile GetProjectile(EnemyType enemyType)
+    public ProjectileController GetProjectile(EnemyType enemyType)
     {
         if (!projectileDict.TryGetValue(enemyType, out ProjectileAttributes projectileAttr)
             || projectileAttr.inactiveProjectiles.Count == 0)
             return null;
 
-        Projectile proj = projectileAttr.inactiveProjectiles[0];
+        ProjectileController proj = projectileAttr.inactiveProjectiles[0];
         projectileAttr.inactiveProjectiles.Remove(proj);
 
         return proj;
     }
 
-    public void ResetProjectile(Projectile projectile, EnemyType enemyType)
+    public void ResetProjectile(ProjectileController projectile, EnemyType enemyType)
     {
         if (!projectileDict.TryGetValue(enemyType, out ProjectileAttributes projectileAttr))
             return;
@@ -106,7 +103,7 @@ public class ProjectileManager : MonoBehaviour
         {
             EnemyType enemyType = projectileElement.Key;
             ProjectileAttributes projectileAttr = projectileElement.Value;
-            foreach (Projectile projectile in projectileAttr.inactiveProjectiles)
+            foreach (ProjectileController projectile in projectileAttr.inactiveProjectiles)
             {
                 if (!projectile)
                     continue;
