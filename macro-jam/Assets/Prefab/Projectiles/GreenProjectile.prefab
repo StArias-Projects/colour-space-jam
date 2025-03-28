@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 6111898815592193402}
   - component: {fileID: 7049156303828949089}
   - component: {fileID: 3889196241119761320}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: GreenProjectile
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -87,7 +87,7 @@ GameObject:
   m_Component:
   - component: {fileID: 156258532952576176}
   - component: {fileID: 1640376349391919800}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}

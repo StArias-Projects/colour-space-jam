@@ -80,6 +80,7 @@ public class EnemyController : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        Debug.Log("TRIGGER 2D " + collision.gameObject.name);
         if (currentDirIndex >= 0 && currentDirIndex < directionPoints.Count
             && collision.gameObject == directionPoints[currentDirIndex].gameObject)
         {

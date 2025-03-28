@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8401358463473283128}
   - component: {fileID: 876459792840065103}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -98,7 +98,7 @@ GameObject:
   - component: {fileID: 8400773782078530196}
   - component: {fileID: 6569899818972705150}
   - component: {fileID: 5715583339131039679}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: BlueProjectile
   m_TagString: Untagged
   m_Icon: {fileID: 0}
