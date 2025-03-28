@@ -19,6 +19,9 @@ public class GamePlayManager : MonoBehaviour
 
     [SerializeField]
     private HUDManager hudManager;
+    
+    [SerializeField]
+    private CameraController cameraController;
 
     [Header("Game Rythm Speed")]
     [SerializeField]
@@ -49,6 +52,7 @@ public class GamePlayManager : MonoBehaviour
     {
         hudManager.SetUp(this, 100);
         enemyManager.SetUp(this);
+        cameraController.SetUp(this);
     }
 
     private void Update()
