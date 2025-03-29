@@ -56,7 +56,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 9dfc825aed78fcd4ba02077103263b40, type: 2}
+  - {fileID: 2100000, guid: daf3352fa2e1e86479f9b0e0a728ddec, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -138,7 +138,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemyType: 0
   weaponController: {fileID: 5908517026390839094}
-  maxHealth: 1
+  sprite: {fileID: 6135199985225050661}
+  shadowSprite: {fileID: 6476879393246805736}
+  maxHealth: 5
   maxSpeed: 2
   rigidBody: {fileID: 2168393888267659187}
   playerMask:
@@ -273,6 +275,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 4545891041647150810}
     m_Modifications:
+    - target: {fileID: 106637302501748491, guid: ff93a92b21a85ae4d98367e61f2c5130, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 820f065cc0dfe214cb290cbdabe98c81, type: 2}
     - target: {fileID: 4846545211328474101, guid: ff93a92b21a85ae4d98367e61f2c5130, type: 3}
       propertyPath: m_Name
       value: SpriteDropShadow
@@ -337,5 +343,10 @@ PrefabInstance:
 --- !u!4 &188441197301263557 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6486836267674320166, guid: ff93a92b21a85ae4d98367e61f2c5130, type: 3}
+  m_PrefabInstance: {fileID: 6384034381797380579}
+  m_PrefabAsset: {fileID: 0}
+--- !u!212 &6476879393246805736 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 106637302501748491, guid: ff93a92b21a85ae4d98367e61f2c5130, type: 3}
   m_PrefabInstance: {fileID: 6384034381797380579}
   m_PrefabAsset: {fileID: 0}
