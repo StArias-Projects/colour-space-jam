@@ -8,6 +8,9 @@ public class ProjectileController : MonoBehaviour
     private Rigidbody2D rigidBody;
 
     [SerializeField]
+    private SpriteRenderer sprite;
+
+    [SerializeField]
     private float speed;
 
     [SerializeField]
@@ -38,10 +41,11 @@ public class ProjectileController : MonoBehaviour
     public static event Action<float> OnEnemyHit;
     public static event Action<ProjectileController> OnBulletDetonated;
 
-    public void SetUp(ProjectileManager manager, EnemyType type)
+    public void SetUp(ProjectileManager manager, EnemyType type, EnemyManager enemyManager)
     {
         EnemyType = type;
         projectileManager = manager;
+        sprite.color = enemyManager.GetEnemyColor(type);
     }
 
     public void OnReset()

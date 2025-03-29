@@ -12,7 +12,7 @@ public class SpriteShadow : MonoBehaviour
         spriteRenderer.sprite = transform.parent.GetComponent<SpriteRenderer>().sprite;
         print(transform.parent.GetComponent<SpriteRenderer>().sprite);
         Color color = Color.black;
-        color.a = .4f;
+        color.a = .5f;
         transform.localScale = Vector3.one;
         spriteRenderer.color = color;
         spriteRenderer.sortingOrder = -1;

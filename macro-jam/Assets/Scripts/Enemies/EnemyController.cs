@@ -59,6 +59,7 @@ public class EnemyController : MonoBehaviour
 
         SetUpDirectionPoints(dirPoints);
         weaponController.SetUpWeapon(this, projManager, targetTr);
+        sprite.color = enemyManager.GetEnemyColor(enemyType);
     }
 
     private void SetUpDirectionPoints(List<Collider2D> dirPoints)

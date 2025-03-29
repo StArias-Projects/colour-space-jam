@@ -63,7 +63,7 @@ public class GamePlayManager : MonoBehaviour
         playerManager.SetUp(this);
         hudManager.SetUp(this, playerManager.GetMaxHealth());
         enemyManager.SetUp(this, projectileManager, playerManager.transform);
-        projectileManager.SetUp();
+        projectileManager.SetUp(enemyManager);
         cameraController.SetUp(this);
         vfxManager.SetUp(this,enemyManager);
     }

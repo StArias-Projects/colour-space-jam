@@ -22,12 +22,15 @@ public class ProjectileManager : MonoBehaviour
 
     private Dictionary<EnemyType, ProjectileAttributes> projectileDict = new Dictionary<EnemyType, ProjectileAttributes>();
 
+    private EnemyManager enemyManager;
+
     public static event Action OnGameOver;
 
     #region Set Up
 
-    public void SetUp()
+    public void SetUp(EnemyManager enemyManagerRef)
     {
+        enemyManager = enemyManagerRef;
         projectileDict = new Dictionary<EnemyType, ProjectileAttributes>();
 
         foreach (var projectile in projectileList)
@@ -51,7 +54,7 @@ public class ProjectileManager : MonoBehaviour
                 ProjectileController projectile = Instantiate(projectileAttr.projectilePrefab, projectileAttr.projectilePool.position, Quaternion.identity, projectileAttr.projectilePool);
                 projectile.gameObject.SetActive(false);
                 projectileAttr.inactiveProjectiles.Add(projectile);
-                projectile.SetUp(this, enemyType);
+                projectile.SetUp(this, enemyType, enemyManager);
             }
         }
     }
