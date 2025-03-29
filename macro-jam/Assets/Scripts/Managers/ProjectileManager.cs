@@ -1,27 +1,25 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using static UnityEngine.GraphicsBuffer;
+
+[Serializable]
+public class ProjectileAttributes
+{
+    public ProjectileController projectilePrefab;
+    public int maxSizePool;
+    public Transform projectilePool;
+    public EnemyType enemyType;
+
+    [HideInInspector]
+    public List<ProjectileController> inactiveProjectiles = new();
+}
 
 public class ProjectileManager : MonoBehaviour
 {
-    [Serializable]
-    public class ProjectileAttributes
-    {
-        public ProjectileController projectilePrefab;
-        public int maxSizePool;
-        public Transform projectilePool;
-        public EnemyType enemyType;
-
-        [HideInInspector]
-        public List<ProjectileController> inactiveProjectiles = new List<ProjectileController>();
-    }
-
     [SerializeField]
     private List<ProjectileAttributes> projectileList;
 
-    private Dictionary<EnemyType, ProjectileAttributes> projectileDict = new Dictionary<EnemyType, ProjectileAttributes>();
-
+    private Dictionary<EnemyType, ProjectileAttributes> projectileDict = new();
     private EnemyManager enemyManager;
 
     public static event Action OnGameOver;
@@ -49,28 +47,12 @@ public class ProjectileManager : MonoBehaviour
             ProjectileAttributes projectileAttr = projectileElement.Value;
             for (int i = 0; i < projectileAttr.maxSizePool; i++)
             {
-                Vector2 positionToSpawn = Vector2.zero;
-
                 ProjectileController projectile = Instantiate(projectileAttr.projectilePrefab, projectileAttr.projectilePool.position, Quaternion.identity, projectileAttr.projectilePool);
                 projectile.gameObject.SetActive(false);
                 projectileAttr.inactiveProjectiles.Add(projectile);
                 projectile.SetUp(this, enemyType, enemyManager);
             }
         }
-    }
-
-    #endregion
-
-    #region Unity Callbacks
-
-    private void OnEnable()
-    {
-        GamePlayManager.OnGameOver += GameOver;
-    }
-
-    private void OnDisable()
-    {
-        GamePlayManager.OnGameOver -= GameOver;
     }
 
     #endregion
@@ -98,24 +80,22 @@ public class ProjectileManager : MonoBehaviour
         projectile.transform.position = projectileAttr.projectilePool.position;
     }
 
+    #region Unity Callbacks
+
+    private void OnEnable()
+    {
+        GamePlayManager.OnGameOver += GameOver;
+    }
+
+    private void OnDisable()
+    {
+        GamePlayManager.OnGameOver -= GameOver;
+    }
+
+    #endregion
 
     public void GameOver()
     {
         OnGameOver?.Invoke();
-
-        foreach (KeyValuePair<EnemyType, ProjectileAttributes> projectileElement in projectileDict)
-        {
-            EnemyType enemyType = projectileElement.Key;
-            ProjectileAttributes projectileAttr = projectileElement.Value;
-            foreach (ProjectileController projectile in projectileAttr.inactiveProjectiles)
-            {
-                if (!projectile)
-                    continue;
-
-                Destroy(projectile.gameObject);
-            }
-
-            projectileAttr.inactiveProjectiles.Clear();
-        }
     }
 }

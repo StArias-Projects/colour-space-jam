@@ -1,8 +1,8 @@
 using UnityEngine;
 using static UnityEngine.InputSystem.InputAction;
 using DG.Tweening;
-using NUnit.Framework;
 using System.Collections.Generic;
+using System;
 
 public class ShieldController : MonoBehaviour
 {
@@ -21,9 +21,6 @@ public class ShieldController : MonoBehaviour
 
     private PlayerManager _player;
 
-
-
-
     public void SetUp(PlayerManager player) 
     {
         _player = player;    
@@ -31,7 +28,7 @@ public class ShieldController : MonoBehaviour
 
     private void Update()
     {
-        if (_player.GetGameState() != GamePlayManager.GameState.Playing)
+        if (!_player || _player.GetGameState() != GameState.Playing)
             return;
 
         RotateShields();
@@ -39,6 +36,9 @@ public class ShieldController : MonoBehaviour
 
     void RotateShields()
     {
+        if (!_player)
+            return;
+
         Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         Vector2 direction = (mousePosition - _player.transform.position).normalized;
         float targetAngle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
@@ -80,7 +80,7 @@ public class ShieldController : MonoBehaviour
             }
         }
         
-        _timesShieldsRotated = _timesShieldsRotated % 4;
+        _timesShieldsRotated %= 4;
         _rotateTween = clickRotator.DOLocalRotate(_timesShieldsRotated * new Vector3(0, 0, 90), secondsToRotateShieldsOnClick);
         SetHighlightedShield();
     }

@@ -10,7 +10,7 @@ public class MainMenuManager : MonoBehaviour
     {
         startGameButton.onClick.AddListener(() =>
         {
-            GameManager.GetInstance().ChangeScene("GamePlay");
+            GameManager.GetInstance().LoadGame();
         });
     }
 }

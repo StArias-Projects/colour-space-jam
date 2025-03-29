@@ -5,12 +5,6 @@ using UnityEngine.UI;
 public class HUDManager : MonoBehaviour
 {
     [SerializeField]
-    private Button restartSceneButton;
-
-    [SerializeField]
-    private Button startSceneButton;
-
-    [SerializeField]
     private Slider healthBar;
 
     [SerializeField]
@@ -23,20 +17,6 @@ public class HUDManager : MonoBehaviour
     public void SetUp(GamePlayManager gpManager, float playerMaxHP)
     {
         gamePlayManager = gpManager;
-        restartSceneButton.gameObject.SetActive(false);
-        startSceneButton.gameObject.SetActive(true);
-
-        startSceneButton.onClick.AddListener(() =>
-        {
-            startSceneButton.gameObject.SetActive(false);
-            gamePlayManager.StartGame();
-        });
-
-        restartSceneButton.onClick.AddListener(() =>
-        {
-            restartSceneButton.gameObject.SetActive(false);
-            gamePlayManager.RestartGame();
-        });
 
         healthBar.maxValue = playerMaxHP;
         healthBar.value = playerMaxHP;
@@ -45,20 +25,21 @@ public class HUDManager : MonoBehaviour
         timeText.text = $"{time.ToString("F0")}";
     }
 
-
     private void OnEnable()
     {
-        GamePlayManager.OnGameOver += GameOver;
+        PlayerManager.OnPlayerTakeDamage += ReduceHealth;
     }
 
     private void OnDisable()
     {
-        GamePlayManager.OnGameOver -= GameOver;
+        PlayerManager.OnPlayerTakeDamage -= ReduceHealth;
     }
 
-    public void UpdateHealth(float health)
+    public void ReduceHealth(float damage)
     {
-        healthBar.value = health;
+        healthBar.value -= damage;
+        if (healthBar.value < 0)
+            healthBar.value = 0;
     }
 
     public void UpdateTime(float newTime)
@@ -67,18 +48,10 @@ public class HUDManager : MonoBehaviour
         timeText.text = $"{time.ToString("F0")}";
     }
 
-    public void UpdateHUD()
+    public void ResetHUD(float health)
     {
-
-    }
-
-    public void StartGame()
-    {
-
-    }
-
-    public void GameOver()
-    {
-
+        healthBar.value = health;
+        time = 0;
+        timeText.text = $"{time.ToString("F0")}";
     }
 }

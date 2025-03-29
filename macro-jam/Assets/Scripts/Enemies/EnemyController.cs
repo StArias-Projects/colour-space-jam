@@ -4,9 +4,12 @@ using UnityEngine;
 using System.Linq;
 using DG.Tweening;
 using System.Threading.Tasks;
+using System.Collections;
 
 public class EnemyController : MonoBehaviour
 {
+    #region Editor Variables
+
     [SerializeField]
     private EnemyType enemyType;
 
@@ -36,6 +39,10 @@ public class EnemyController : MonoBehaviour
     [SerializeField]
     private LayerMask shieldMask;
 
+    #endregion
+
+    #region Private Variables
+
     private int poolGroup;
     private int currentDirIndex = -1;
 
@@ -43,10 +50,10 @@ public class EnemyController : MonoBehaviour
     private float currentSpeed = 0;
 
     private Vector2 movementDir = Vector2.zero;
-
-    private List<Collider2D> directionPoints = new List<Collider2D>();
-
+    private List<Collider2D> directionPoints = new();
     private EnemyManager enemyManager;
+
+    #endregion
 
     #region Set Up
 
@@ -75,27 +82,22 @@ public class EnemyController : MonoBehaviour
     private void OnEnable()
     {
         EnemyManager.OnGameOver += OnGameOver;
-        ProjectileController.OnEnemyHit += ReceiveDamage;
     }
 
     private void OnDisable()
     {
         EnemyManager.OnGameOver -= OnGameOver;
-        ProjectileController.OnEnemyHit -= ReceiveDamage;
     }
 
     private void FixedUpdate()
     {
-        if (enemyManager.GetGameState() != GamePlayManager.GameState.Playing)
-            return;
-
         rigidBody.linearVelocity = currentSpeed * movementDir;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
         int mask = 1 << collision.gameObject.layer;
-        if (currentDirIndex >= 0 && currentDirIndex < directionPoints.Count && 
+        if (currentDirIndex >= 0 && currentDirIndex < directionPoints.Count &&
             (collision.gameObject == directionPoints[currentDirIndex].gameObject
             || (mask & playerMask.value) != 0
             || (mask & shieldMask.value) != 0))
@@ -125,7 +127,7 @@ public class EnemyController : MonoBehaviour
         return poolGroup;
     }
 
-    public void ReceiveDamage(float damage)
+    public bool ReceiveDamage(float damage)
     {
         health -= damage;
 
@@ -135,19 +137,21 @@ public class EnemyController : MonoBehaviour
         if (health <= 0)
         {
             health = 0;
-            ReleaseBackToPoolAfter(tween.Duration());
+            StartCoroutine(EnemyDeath(tween.Duration()));
+
+            return true;
         }
+
+        return false;
     }
 
-    //i did this so the animation of the tween can play out before it is released back to pool, might need to disable collision while it is dying
-    async Task ReleaseBackToPoolAfter(float seconds)
+    IEnumerator EnemyDeath(float seconds)
     {
-        await Awaitable.WaitForSecondsAsync(seconds);
+        // Trigger Die Animation here
+        yield return new WaitForSeconds(seconds);
+
         enemyManager.ResetEnemy(this);
     }
-
-
-
 
     public void StartEnemy(Vector2 position)
     {
@@ -160,6 +164,9 @@ public class EnemyController : MonoBehaviour
 
     public void OnGameOver()
     {
-        Destroy(gameObject);
+        if (!enemyManager)
+            return;
+
+        enemyManager.ResetEnemy(this);
     }
 }

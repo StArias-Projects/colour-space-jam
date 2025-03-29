@@ -11,6 +11,4 @@ public class Shield : MonoBehaviour
     {
         startingLocalPosition = transform.localPosition;
     }
-
-
 }

@@ -1,16 +1,9 @@
 using System;
+using System.Collections;
 using UnityEngine;
 
 public class GamePlayManager : MonoBehaviour
 {
-    public enum GameState 
-    {
-        Opening,
-        Playing, 
-        Pause,
-        GameOver
-    }
-
     #region Editor Variables
 
     [SerializeField]
@@ -21,10 +14,10 @@ public class GamePlayManager : MonoBehaviour
 
     [SerializeField]
     private HUDManager hudManager;
-    
+
     [SerializeField]
     private ProjectileManager projectileManager;
-    
+
     [SerializeField]
     private CameraController cameraController;
 
@@ -51,34 +44,89 @@ public class GamePlayManager : MonoBehaviour
     private float elapsedTime = 0f;
     private float currentGameTime = 0;
     private GameState gameState = GameState.Opening;
+    private Stats gameStats;
+    private GameManager gameManager;
 
+    public static event Action OnGameOver;
     #endregion
-
-    public static Action OnGameOver;
 
     #region Unity Callbacks
 
-    void Awake()
-    {
-        playerManager.SetUp(this);
-        hudManager.SetUp(this, playerManager.GetMaxHealth());
-        enemyManager.SetUp(this, projectileManager, playerManager.transform);
-        projectileManager.SetUp(enemyManager);
-        cameraController.SetUp(this);
-        vfxManager.SetUp(this,enemyManager);
-    }
-
     private void Update()
     {
+        if (gameState != GameState.Playing)
+            return;
+
         IncreaseGameRythmSpeed();
         IncreaseTime();
     }
 
     #endregion
 
+    #region Game States
+
+    public void SetUp()
+    {
+        gameManager = GameManager.GetInstance();
+        gameStats.enemiesKilled = new();
+
+        playerManager.SetUp(this);
+        hudManager.SetUp(this, playerManager.GetMaxHealth());
+        enemyManager.SetUp(this, projectileManager, playerManager.transform);
+        projectileManager.SetUp(enemyManager);
+        cameraController.SetUp(this);
+        vfxManager.SetUp(this, enemyManager);
+
+        StartGame();
+    }
+
+    private void StartGame()
+    {
+        gameState = GameState.Playing;
+        currentSpeed = minSpeed;
+    }
+
+    public IEnumerator GameOver()
+    {
+        gameState = GameState.GameOver;
+
+        gameStats.time = (uint)currentGameTime;
+        currentSpeed = 0;
+
+        playerManager.StartDeathAnimation();
+        OnGameOver?.Invoke();
+        
+        yield return new WaitUntil(() => playerManager.IsDeathAnimationFinished());
+
+        gameManager.GameOver(gameStats);
+    }
+
+    public void ResetGame(Stats stats) 
+    {
+        currentGameTime = 0;
+        gameStats = stats;
+        gameState = GameState.Playing;
+        playerManager.ResetPlayer();
+        hudManager.ResetHUD(playerManager.GetMaxHealth());
+    }
+
+    public void PauseGame()
+    {
+
+    }
+
+    public GameState GetGameState()
+    {
+        return gameState;
+    }
+
+    #endregion
+
+    #region Logic Behaviour
+
     private void IncreaseGameRythmSpeed()
     {
-        if (gameState != GameState.Playing || currentSpeed >= maxSpeed)
+        if (currentSpeed >= maxSpeed)
             return;
 
         elapsedTime += Time.deltaTime;
@@ -89,59 +137,43 @@ public class GamePlayManager : MonoBehaviour
             return;
 
         currentSpeed = newSpeed;
+        if (currentSpeed > maxSpeed) currentSpeed = maxSpeed;
     }
 
-    private void IncreaseTime() 
+    private void IncreaseTime()
     {
-        if (gameState != GameState.Playing)
-            return;
-
         currentGameTime += Time.deltaTime;
         hudManager.UpdateTime(currentGameTime);
     }
 
-    /// <summary>
-    /// Temporary function to start the game
-    /// </summary>
-    public void StartGame()
-    {
-        ChangeGameState(GameState.Playing);
-        gameState = GameState.Playing;
+    #endregion
 
-        enemyManager.StartGame();
-        currentSpeed = minSpeed;
+    #region GameStats
+
+    private void OnEnable()
+    {
+        ProjectileController.OnProjectileReflected += ProjectileReflected;
+        ProjectileController.OnEnemyKilled += EnemyKilled;
     }
 
-    public void GameOver()
+    private void OnDisable()
     {
-        ChangeGameState(GameState.GameOver);
-        currentSpeed = 0;
-
-        OnGameOver?.Invoke();
+        ProjectileController.OnProjectileReflected -= ProjectileReflected;
+        ProjectileController.OnEnemyKilled -= EnemyKilled;
     }
 
-    public void PauseGame() 
+    private void ProjectileReflected()
     {
-    
+        gameStats.projectilesReflected++;
     }
 
-    private void ChangeGameState(GameState newState)
+    private void EnemyKilled(EnemyType enemyType)
     {
-        gameState = newState;
+        if (gameStats.enemiesKilled.ContainsKey(enemyType))
+            gameStats.enemiesKilled[enemyType]++;
+        else
+            gameStats.enemiesKilled.Add(enemyType, 1);
     }
 
-    public GameState GetGameState() 
-    {
-        return gameState;
-    }
-
-    public void RestartGame()
-    {
-        GameManager.GetInstance().ChangeScene(1);
-    }
-
-    public void UpdateHealth(float health)
-    {
-        hudManager.UpdateHealth(health);
-    }
+    #endregion
 }

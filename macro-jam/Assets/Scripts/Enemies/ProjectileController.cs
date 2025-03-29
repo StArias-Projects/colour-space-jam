@@ -22,15 +22,6 @@ public class ProjectileController : MonoBehaviour
     [SerializeField]
     private float attackPower;
 
-    [SerializeField]
-    private LayerMask playerMask;
-
-    [SerializeField]
-    private LayerMask shieldMask;
-
-    [SerializeField]
-    private LayerMask enemyMask;
-
     private float currentLifeTime = 0;
     private ProjectileManager projectileManager;
     private Vector2 projDir;
@@ -38,8 +29,9 @@ public class ProjectileController : MonoBehaviour
     private bool isBounced = false;
 
     public static event Action<float> OnPlayerHit;
-    public static event Action<float> OnEnemyHit;
     public static event Action<ProjectileController> OnBulletDetonated;
+    public static event Action<EnemyType> OnEnemyKilled;
+    public static event Action OnProjectileReflected;
 
     public void SetUp(ProjectileManager manager, EnemyType type, EnemyManager enemyManager)
     {
@@ -52,6 +44,7 @@ public class ProjectileController : MonoBehaviour
     {
         isBounced = false;
     }
+
     private void OnEnable()
     {
         if (!projectileManager)
@@ -66,12 +59,6 @@ public class ProjectileController : MonoBehaviour
             return;
 
         ProjectileManager.OnGameOver -= OnGameOver;
-    }
-
-    private void OnGameOver()
-    {
-        gameObject.SetActive(false);
-        Destroy(gameObject);
     }
 
     private void FixedUpdate()
@@ -94,30 +81,30 @@ public class ProjectileController : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if(collision.TryGetComponent(out Shield shieldHit))
+        if (collision.TryGetComponent(out Shield shieldHit))
         {
-            if(shieldHit.color == EnemyType)
+            if (shieldHit.color == EnemyType)
             {
                 projDir = shieldHit.transform.up;
                 speed = speedAfterBounced;
                 isBounced = true;
-                //do bullet vfx and maybe change to white bullet to indicate it can hit any enemy color now
+
+                ProjectileBounceEffect();
+                OnProjectileReflected?.Invoke();
             }
         }
-        else if(isBounced && collision.TryGetComponent(out EnemyController enemy))
+        else if (isBounced && collision.TryGetComponent(out EnemyController enemy))
         {
             OnBulletDetonated?.Invoke(this);
-            enemy.ReceiveDamage(attackPower);
+
+            if (enemy.ReceiveDamage(attackPower))
+            {
+                EnemyType enemyType = enemy.GetEnemyType();
+                OnEnemyKilled?.Invoke(enemyType);
+            }
             projectileManager.ResetProjectile(this, EnemyType);
-            
         }
-
-
-
-
-        int mask = 1 << collision.gameObject.layer;
-
-        if ((mask & playerMask.value) != 0)
+        else if (!isBounced && collision.transform.parent && collision.transform.parent.TryGetComponent(out PlayerManager player))
         {
             OnBulletDetonated?.Invoke(this);
             OnPlayerHit?.Invoke(attackPower);
@@ -125,10 +112,24 @@ public class ProjectileController : MonoBehaviour
         }
     }
 
+    private void ProjectileBounceEffect()
+    {
+        //do bullet vfx and maybe change to white bullet to indicate it can hit any enemy color now
+        sprite.color = Color.white;
+    }
+
     public void ShootProjectile(Vector2 pos, Vector2 dir)
     {
         transform.position = pos;
         gameObject.SetActive(true);
         projDir = dir;
+    }
+
+    private void OnGameOver()
+    {
+        if (!projectileManager)
+            return;
+
+        projectileManager.ResetProjectile(this, EnemyType);
     }
 }

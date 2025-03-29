@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 
 public class PlayerManager : MonoBehaviour
@@ -14,13 +15,14 @@ public class PlayerManager : MonoBehaviour
 
     private float health = 0;
     private GamePlayManager gamePlayManager;
-
-
+    private bool isDeathFinished = false;
+    private Vector3 initialTr;
     public static event Action<float> OnPlayerTakeDamage;
 
     public void SetUp(GamePlayManager gpManager) 
     {
         health = maxHealth;
+        initialTr = transform.position;
         gamePlayManager = gpManager;
         playerController.SetUp(this);
         shieldController.SetUp(this);
@@ -29,13 +31,11 @@ public class PlayerManager : MonoBehaviour
     private void OnEnable()
     {
         ProjectileController.OnPlayerHit += ReceiveDamage;
-        GamePlayManager.OnGameOver += GameOver;
     }
 
     private void OnDisable()
     {
         ProjectileController.OnPlayerHit -= ReceiveDamage;
-        GamePlayManager.OnGameOver -= GameOver;
     }
 
     #region Getters
@@ -50,12 +50,13 @@ public class PlayerManager : MonoBehaviour
         return maxHealth;
     }
 
-    public GamePlayManager.GameState GetGameState()
+    public GameState GetGameState()
     {
         return gamePlayManager.GetGameState();
     }
 
     #endregion
+
 
     public void ReceiveDamage(float damage)
     {
@@ -68,14 +69,30 @@ public class PlayerManager : MonoBehaviour
         if (health <= 0)
         {
             health = 0;
-            gamePlayManager.GameOver();
+            StartCoroutine(gamePlayManager.GameOver());
         }
-
-        gamePlayManager.UpdateHealth(health);
     }
 
-    public void GameOver() 
+    public void StartDeathAnimation() 
     {
-        
+        // TODO: This is temporal here and it should go at the end of the animation
+        FinishDeathAnimation();
+    }
+
+    public void FinishDeathAnimation() 
+    {
+        isDeathFinished = true;
+    }
+
+    public void ResetPlayer()
+    {
+        isDeathFinished = false;
+        health = maxHealth;
+        transform.position = initialTr;
+    }
+
+
+    public bool IsDeathAnimationFinished() {
+        return isDeathFinished; 
     }
 }

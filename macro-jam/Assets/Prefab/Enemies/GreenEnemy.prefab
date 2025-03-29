@@ -52,7 +52,7 @@ MonoBehaviour:
   weaponController: {fileID: 8211319081693990385}
   sprite: {fileID: 7585764268495123999}
   shadowSprite: {fileID: 3121514580414072369}
-  maxHealth: 5
+  maxHealth: 1
   maxSpeed: 2
   rigidBody: {fileID: 4764819185033694145}
   playerMask:

@@ -52,6 +52,7 @@ public class CameraController : MonoBehaviour
     {
         StartCoroutine(ShakeCamera(amount / 5f));
     }
+
     IEnumerator ShakeCamera(float withForce)
     {
         Time.timeScale = 0;

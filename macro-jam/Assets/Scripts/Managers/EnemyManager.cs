@@ -8,10 +8,10 @@ public enum EnemyType
     Blue,
     Red,
     Green,
-    Orange
+    Orange,
+
+    None
 }
-
-
 
 public class EnemyManager : MonoBehaviour
 {
@@ -26,7 +26,7 @@ public class EnemyManager : MonoBehaviour
         public int maxSizePool;
 
         [HideInInspector]
-        public List<EnemyController> inactiveEnemies = new List<EnemyController>();
+        public List<EnemyController> inactiveEnemies = new();
     }
 
     #region Editor Variables
@@ -55,11 +55,7 @@ public class EnemyManager : MonoBehaviour
     private GamePlayManager gamePlayManager;
     private ProjectileManager projectileManager;
     private Transform targetTr;
-    private bool isGenerating = false;
     private float currentTime = 0;
-
-    public static event Action OnGameOver;
-
 
     [SerializeField]
     private Color enemyBlueColor;
@@ -70,7 +66,7 @@ public class EnemyManager : MonoBehaviour
     [SerializeField]
     private Color enemyOrangeColor;
 
-
+    public static event Action OnGameOver;
 
     public void SetUp(GamePlayManager gpManager, ProjectileManager projManager, Transform target)
     {
@@ -82,11 +78,6 @@ public class EnemyManager : MonoBehaviour
         
         //just for fast testing
         SpawnEnemy();
-    }
-
-    public void StartGame()
-    {
-        isGenerating = true;
     }
 
     public void GenerateEnemies()
@@ -119,7 +110,7 @@ public class EnemyManager : MonoBehaviour
 
     private void Update()
     {
-        if (!isGenerating)
+        if (!gamePlayManager || gamePlayManager.GetGameState() != GameState.Playing)
             return;
 
         currentTime += Time.deltaTime;
@@ -158,17 +149,6 @@ public class EnemyManager : MonoBehaviour
         enemyPoolList[group].inactiveEnemies.Add(enemy);
     }
 
-    public void GameOver()
-    {
-        isGenerating = false;
-        OnGameOver?.Invoke();
-    }
-
-    public GamePlayManager.GameState GetGameState() 
-    {
-        return gamePlayManager.GetGameState();
-    }
-
     public Color GetEnemyColor(EnemyType enemyType)
     {
         switch (enemyType)
@@ -181,7 +161,15 @@ public class EnemyManager : MonoBehaviour
                 return enemyGreenColor;
             case EnemyType.Orange:
                 return enemyOrangeColor;
+            default:
+                break;
         }
+
         return Color.black;
+    }
+
+    public void GameOver()
+    {
+        OnGameOver?.Invoke();
     }
 }
