@@ -90,6 +90,7 @@ public class ProjectileManager : MonoBehaviour
             return;
 
         projectileAttr.inactiveProjectiles.Add(projectile);
+        projectile.OnReset();
         projectile.gameObject.SetActive(false);
         projectile.transform.position = projectileAttr.projectilePool.position;
     }

@@ -41,6 +41,10 @@ public class ProjectileController : MonoBehaviour
         projectileManager = manager;
     }
 
+    public void OnReset()
+    {
+        isBounced = false;
+    }
     private void OnEnable()
     {
         if (!projectileManager)
@@ -66,6 +70,9 @@ public class ProjectileController : MonoBehaviour
     private void FixedUpdate()
     {
         rigidBody.linearVelocity = projDir * speed;
+
+        float angle = Mathf.Atan2(projDir.y, projDir.x) * Mathf.Rad2Deg;
+        transform.rotation = Quaternion.Euler(0, 0, angle);
     }
 
     void Update()
@@ -80,16 +87,26 @@ public class ProjectileController : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        print(collision.name);
         if(collision.TryGetComponent(out Shield shieldHit))
         {
             if(shieldHit.color == enemyType)
             {
                 projDir = shieldHit.transform.up;
                 speed = 8;
-
+                isBounced = true;
                 //do bullet vfx and maybe change to white bullet to indicate it can hit any enemy color now
             }
         }
+        else if(isBounced && collision.TryGetComponent(out EnemyController enemy))
+        {
+            enemy.ReceiveDamage(attackPower);
+            projectileManager.ResetProjectile(this, enemyType);
+        }
+
+
+
+
         int mask = 1 << collision.gameObject.layer;
 
         if ((mask & playerMask.value) != 0)
