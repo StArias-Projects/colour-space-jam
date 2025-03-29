@@ -11,6 +11,8 @@ public enum EnemyType
     Orange
 }
 
+
+
 public class EnemyManager : MonoBehaviour
 {
 
@@ -28,6 +30,9 @@ public class EnemyManager : MonoBehaviour
     }
 
     #region Editor Variables
+
+
+    
 
     [SerializeField]
     [Tooltip("Enemies per second")]
@@ -54,6 +59,18 @@ public class EnemyManager : MonoBehaviour
     private float currentTime = 0;
 
     public static event Action OnGameOver;
+
+
+    [SerializeField]
+    private Color enemyBlueColor;
+    [SerializeField]
+    private Color enemyRedColor;
+    [SerializeField]
+    private Color enemyGreenColor;
+    [SerializeField]
+    private Color enemyOrangeColor;
+
+
 
     public void SetUp(GamePlayManager gpManager, ProjectileManager projManager, Transform target)
     {
@@ -150,5 +167,21 @@ public class EnemyManager : MonoBehaviour
     public GamePlayManager.GameState GetGameState() 
     {
         return gamePlayManager.GetGameState();
+    }
+
+    public Color GetEnemyColor(EnemyType enemyType)
+    {
+        switch (enemyType)
+        {
+            case EnemyType.Blue:
+                return enemyBlueColor;
+            case EnemyType.Red:
+                return enemyRedColor;
+            case EnemyType.Green:
+                return enemyGreenColor;
+            case EnemyType.Orange:
+                return enemyOrangeColor;
+        }
+        return Color.black;
     }
 }

@@ -28,6 +28,9 @@ public class GamePlayManager : MonoBehaviour
     [SerializeField]
     private CameraController cameraController;
 
+    [SerializeField]
+    private VFXManager vfxManager;
+
     [Header("Game Rythm Speed")]
     [SerializeField]
     [Min(0)]
@@ -62,6 +65,7 @@ public class GamePlayManager : MonoBehaviour
         enemyManager.SetUp(this, projectileManager, playerManager.transform);
         projectileManager.SetUp();
         cameraController.SetUp(this);
+        vfxManager.SetUp(this,enemyManager);
     }
 
     private void Update()

@@ -11,6 +11,9 @@ public class ProjectileController : MonoBehaviour
     private float speed;
 
     [SerializeField]
+    private float speedAfterBounced = 12;
+
+    [SerializeField]
     private float maxLifeTime;
 
     [SerializeField]
@@ -28,16 +31,16 @@ public class ProjectileController : MonoBehaviour
     private float currentLifeTime = 0;
     private ProjectileManager projectileManager;
     private Vector2 projDir;
-    private EnemyType enemyType;
+    public EnemyType EnemyType { get; private set; }
     private bool isBounced = false;
 
     public static event Action<float> OnPlayerHit;
     public static event Action<float> OnEnemyHit;
-
+    public static event Action<ProjectileController> OnBulletDetonated;
 
     public void SetUp(ProjectileManager manager, EnemyType type)
     {
-        enemyType = type;
+        EnemyType = type;
         projectileManager = manager;
     }
 
@@ -82,26 +85,27 @@ public class ProjectileController : MonoBehaviour
 
         currentLifeTime += Time.deltaTime;
         if (currentLifeTime >= maxLifeTime)
-            projectileManager.ResetProjectile(this, enemyType);
+            projectileManager.ResetProjectile(this, EnemyType);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        print(collision.name);
         if(collision.TryGetComponent(out Shield shieldHit))
         {
-            if(shieldHit.color == enemyType)
+            if(shieldHit.color == EnemyType)
             {
                 projDir = shieldHit.transform.up;
-                speed = 8;
+                speed = speedAfterBounced;
                 isBounced = true;
                 //do bullet vfx and maybe change to white bullet to indicate it can hit any enemy color now
             }
         }
         else if(isBounced && collision.TryGetComponent(out EnemyController enemy))
         {
+            OnBulletDetonated?.Invoke(this);
             enemy.ReceiveDamage(attackPower);
-            projectileManager.ResetProjectile(this, enemyType);
+            projectileManager.ResetProjectile(this, EnemyType);
+            
         }
 
 
@@ -111,8 +115,9 @@ public class ProjectileController : MonoBehaviour
 
         if ((mask & playerMask.value) != 0)
         {
+            OnBulletDetonated?.Invoke(this);
             OnPlayerHit?.Invoke(attackPower);
-            projectileManager.ResetProjectile(this, enemyType);
+            projectileManager.ResetProjectile(this, EnemyType);
         }
     }
 

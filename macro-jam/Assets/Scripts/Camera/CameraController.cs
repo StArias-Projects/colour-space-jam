@@ -1,5 +1,8 @@
 using System;
 using UnityEngine;
+using DG.Tweening;
+using System.Threading.Tasks;
+using System.Collections;
 
 public class CameraController : MonoBehaviour
 {
@@ -28,8 +31,13 @@ public class CameraController : MonoBehaviour
         cam = Camera.main;
 
         AdjustCameraFOV();
+        PlayerManager.OnPlayerTakeDamage += OnPlayerTakeDamage;
     }
 
+    private void OnDestroy()
+    {
+        PlayerManager.OnPlayerTakeDamage -= OnPlayerTakeDamage;
+    }
 
     void AdjustCameraFOV()
     {
@@ -38,4 +46,18 @@ public class CameraController : MonoBehaviour
         // Adjust orthographic size instead of FOV
         cam.orthographicSize = defaultSize * (currentAspect / defaultAspect);
     }
+
+
+    void OnPlayerTakeDamage(float amount)
+    {
+        StartCoroutine(ShakeCamera(amount / 5f));
+    }
+    IEnumerator ShakeCamera(float withForce)
+    {
+        Time.timeScale = 0;
+        yield return new WaitForSecondsRealtime(.1f);
+        Time.timeScale = 1;
+        transform.DOShakePosition(.4f, withForce, 50);
+    }
+  
 }

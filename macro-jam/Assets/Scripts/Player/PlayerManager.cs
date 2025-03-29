@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class PlayerManager : MonoBehaviour
@@ -13,6 +14,9 @@ public class PlayerManager : MonoBehaviour
 
     private float health = 0;
     private GamePlayManager gamePlayManager;
+
+
+    public static event Action<float> OnPlayerTakeDamage;
 
     public void SetUp(GamePlayManager gpManager) 
     {
@@ -56,6 +60,11 @@ public class PlayerManager : MonoBehaviour
     public void ReceiveDamage(float damage)
     {
         health -= damage;
+        if(damage > 0)
+        {
+            OnPlayerTakeDamage?.Invoke(damage);
+        }
+
         if (health <= 0)
         {
             health = 0;
