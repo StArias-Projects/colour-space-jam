@@ -10,8 +10,7 @@ public class EnemyController : MonoBehaviour
 {
     #region Editor Variables
 
-    [SerializeField]
-    private ProjectileType projectileThisShoots;
+   
 
     private EnemyType enemyType;
 
@@ -41,13 +40,17 @@ public class EnemyController : MonoBehaviour
     [SerializeField]
     private LayerMask shieldMask;
 
+
+    [SerializeField]
+    private float rotateTowardsTargetSpeed = 0;
+
     #endregion
 
     #region Private Variables
 
     private int poolGroup;
     private int currentDirIndex = -1;
-
+    private Transform target;
     private float health = 0;
     private float currentSpeed = 0;
     private bool isDead = false;
@@ -67,6 +70,7 @@ public class EnemyController : MonoBehaviour
         poolGroup = group;
         currentSpeed = maxSpeed;
         enemyType = enemyColor;
+        target = targetTr;
         SetUpDirectionPoints(dirPoints);
         weaponController.SetUpWeapon(this, projManager, targetTr);
         sprite.color = enemyManager.GetEnemyColor(enemyType);
@@ -94,9 +98,24 @@ public class EnemyController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        rigidBody.linearVelocity = currentSpeed * movementDir;
+        if (!weaponController.isShooting)
+        {
+            rigidBody.AddForce( currentSpeed * movementDir);
+            RotateTowardsTarget(1);
+        }
+        else
+        {
+            RotateTowardsTarget(.5f);
+        }
     }
 
+    private void RotateTowardsTarget(float rotateSpeedMultiplier =1f)
+    {
+        if (rotateTowardsTargetSpeed == 0) return;
+        Vector2 directionToPlayer = (target.transform.position - transform.position).normalized;
+        float angle = Mathf.Atan2(directionToPlayer.y, directionToPlayer.x) * Mathf.Rad2Deg;
+        transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(0, 0, angle), Time.fixedDeltaTime * rotateTowardsTargetSpeed * rotateSpeedMultiplier);
+    }
     private void OnTriggerEnter2D(Collider2D collision)
     {
         int mask = 1 << collision.gameObject.layer;
@@ -116,10 +135,7 @@ public class EnemyController : MonoBehaviour
         return enemyType;
     }
 
-    public ProjectileType GetProjectileType()
-    {
-        return projectileThisShoots;
-    }
+
 
     public void ChangeMovementDirection()
     {
@@ -139,13 +155,13 @@ public class EnemyController : MonoBehaviour
     {
         health -= damage;
 
-        Tween tween = sprite.material.DOFloat(health / maxHealth, "_PercentHealth", .8f).SetEase(Ease.OutBounce);
-        shadowSprite.material.DOFloat(health / maxHealth, "_PercentHealth", .8f).SetEase(Ease.OutBounce);
+        Tween tween = sprite.material.DOFloat(health / maxHealth, "_PercentHealth", .5f).SetEase(Ease.OutSine);
+        shadowSprite.material.DOFloat(health / maxHealth, "_PercentHealth", .5f).SetEase(Ease.OutSine);
 
         if (health <= 0)
         {
             health = 0;
-            StartCoroutine(EnemyDeath(tween.Duration()));
+            StartCoroutine(EnemyDeath(.5f));
 
             return true;
         }
@@ -156,7 +172,9 @@ public class EnemyController : MonoBehaviour
     IEnumerator EnemyDeath(float seconds)
     {
         isDead = true;
-        // Trigger Die Animation here
+        sprite.material.DOFloat(-1, "_PercentHealth", .5f).SetEase(Ease.OutSine);
+        shadowSprite.material.DOFloat(-1, "_PercentHealth", .5f).SetEase(Ease.OutSine);
+
         yield return new WaitForSeconds(seconds);
 
         enemyManager.ResetEnemy(this);

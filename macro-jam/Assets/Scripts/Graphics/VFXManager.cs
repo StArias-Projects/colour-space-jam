@@ -24,9 +24,9 @@ public class VFXManager : MonoBehaviour
     }
 
 
-    public void OnBulletDetonate(ProjectileController bullet)
+    public void OnBulletDetonate(Vector3 positionOfDetonation, EnemyType enemyType)
     {
-        PlayImpactVFX(bullet.transform.position, enemyManager.GetEnemyColor(bullet.EnemyType));
+        PlayImpactVFX(positionOfDetonation, enemyManager.GetEnemyColor(enemyType));
     }
 
     public void PlayImpactVFX(Vector3 positionToSpawnAt, Color color)
