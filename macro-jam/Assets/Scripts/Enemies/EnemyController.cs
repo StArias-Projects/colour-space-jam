@@ -188,6 +188,8 @@ public class EnemyController : MonoBehaviour
         health = maxHealth;
         transform.position = position;
         ChangeMovementDirection();
+
+        sprite.DOFade(0, 0).OnComplete(()=> sprite.DOFade(1, 1));
     }
 
     public void OnGameOver()

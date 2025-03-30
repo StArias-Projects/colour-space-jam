@@ -87,8 +87,8 @@ public class EnemyWeaponController : MonoBehaviour
     }
     private void Shoot(Vector2 dir)
     {
-        
-        
+        if (enemyController.IsDead()) return;
+         
         shotsInBustSoFar += 1;
         ProjectileController proj = projectileManager.GetProjectile(projectileThisShoots);
         if (!proj)

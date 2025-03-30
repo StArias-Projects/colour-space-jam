@@ -7,11 +7,8 @@ public class Shield : MonoBehaviour
 
     private Vector3 startingLocalPosition;
 
-    [SerializeField]
-    private float shieldHitPulseAmount = 2f;
 
-    [SerializeField]
-    private float shieldHitPulseTime = 1f;
+    private float shieldHitPulseTime = .4f;
 
     private bool IsMainShield = false;
 
@@ -39,17 +36,17 @@ public class Shield : MonoBehaviour
 
     public void OnHit()
     {
-        //if (IsMainShield)
-        //{
-        //    transform.DOScale(Vector3.one, shieldHitPulseTime);
-        //    transform.DOLocalMove(startingLocalPosition * 1.5f, shieldHitPulseTime);
-        //}
+        if (IsMainShield)
+        {
+            transform.DOShakeRotation(shieldHitPulseTime * .2f,5f).OnComplete(()=>ToggleAsMainShield(true,shieldHitPulseTime* .8f));
+            transform.DOLocalMove(startingLocalPosition * 1.3f, shieldHitPulseTime * .2f);
+        }
 
-        //else
-        //{
-        //    transform.DOScale(Vector3.one * .5f, shieldHitPulseTime);
-        //    transform.DOLocalMove(startingLocalPosition, shieldHitPulseTime);
-        //}
+        else
+        {
+            transform.DOShakeRotation(shieldHitPulseTime * .2f, 5f).OnComplete(() => ToggleAsMainShield(false, shieldHitPulseTime *.8f));
+            transform.DOLocalMove(startingLocalPosition *.8f, shieldHitPulseTime * .2f);
+        }
     }
 
 }

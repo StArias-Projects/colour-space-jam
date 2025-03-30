@@ -240,8 +240,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   color: 2
-  shieldHitPulseAmount: 2
-  shieldHitPulseTime: 1
 --- !u!50 &388265356073600037
 Rigidbody2D:
   serializedVersion: 5
@@ -618,8 +616,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   color: 1
-  shieldHitPulseAmount: 2
-  shieldHitPulseTime: 1
 --- !u!50 &4826136662025502542
 Rigidbody2D:
   serializedVersion: 5

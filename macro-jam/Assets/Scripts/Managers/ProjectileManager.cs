@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.VFX;
 
 
 
@@ -30,13 +31,14 @@ public class ProjectileManager : MonoBehaviour
 
     private Dictionary<ProjectileType, ProjectileAttributes> projectileDict = new();
     private EnemyManager enemyManager;
-
+    protected VFXManager vfxManager;
     public static event Action OnGameOver;
 
     #region Set Up
 
-    public void SetUp(EnemyManager enemyManagerRef)
+    public void SetUp(EnemyManager enemyManagerRef, VFXManager vfxManagerRef)
     {
+        vfxManager = vfxManagerRef;
         enemyManager = enemyManagerRef;
         projectileDict = new Dictionary<ProjectileType, ProjectileAttributes>();
 
@@ -59,7 +61,7 @@ public class ProjectileManager : MonoBehaviour
                 ProjectileController projectile = Instantiate(projectileAttr.projectilePrefab, projectileAttr.projectilePool.position, Quaternion.identity, projectileAttr.projectilePool);
                 projectile.gameObject.SetActive(false);
                 projectileAttr.inactiveProjectiles.Add(projectile);
-                projectile.SetUp(this, enemyManager);
+                projectile.SetUp(this, enemyManager, vfxManager);
             }
         }
     }

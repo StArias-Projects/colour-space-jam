@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 1870940713537229630}
   - component: {fileID: 2473945272821792828}
   - component: {fileID: 7504650037758747561}
+  - component: {fileID: 3761330930876990355}
   m_Layer: 0
   m_Name: ImpactVFXPrefab
   m_TagString: Untagged
@@ -122,9 +123,9 @@ AudioSource:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6895134427394376926}
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: 9184600552029247248, guid: 9b612d6c0a8ca0c4e84616a35c2c0bbd, type: 2}
   m_audioClip: {fileID: 8300000, guid: a768c902e96bf1f489a64fcd739a1bdb, type: 3}
   m_Resource: {fileID: 8300000, guid: a768c902e96bf1f489a64fcd739a1bdb, type: 3}
   m_PlayOnAwake: 1
@@ -212,3 +213,18 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &3761330930876990355
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6895134427394376926}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b0d6a8ea01a765f4191562e8f48c4b3f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  clips:
+  - {fileID: 8300000, guid: a768c902e96bf1f489a64fcd739a1bdb, type: 3}
+  pitchVariation: 0.1

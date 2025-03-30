@@ -7,11 +7,6 @@ public class ProjectileController : MonoBehaviour
     [SerializeField]
     protected Rigidbody2D rigidBody;
 
-    
-
-    
-    
-
     [SerializeField]
     protected float maxLifeTime;
 
@@ -25,7 +20,7 @@ public class ProjectileController : MonoBehaviour
     protected ProjectileManager projectileManager;
     protected EnemyManager enemyManager;
     protected Vector2 projDir;
-
+    protected VFXManager vfxManager;
 
     public EnemyType enemyColor { get; private set; }
     
@@ -40,10 +35,11 @@ public class ProjectileController : MonoBehaviour
 
 
 
-    public void SetUp(ProjectileManager manager, EnemyManager enemyManagerRef)
+    public void SetUp(ProjectileManager manager, EnemyManager enemyManagerRef, VFXManager vfxManagerRef)
     {    
         enemyManager = enemyManagerRef;
         projectileManager = manager;
+        vfxManager = vfxManagerRef;
     }
 
     public void OnReset()
