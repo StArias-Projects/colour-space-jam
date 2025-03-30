@@ -190,7 +190,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fireRate: 0.2
   shotsInBurst: 3
-  secondsBetweenShotsInBurst: 0.1
+  secondsBetweenShotsInBurst: 0.4
   fireInForwardDirection: 1
   secondsOfChargeTimeBeforeShot: 1
   projectileThisShoots: 1

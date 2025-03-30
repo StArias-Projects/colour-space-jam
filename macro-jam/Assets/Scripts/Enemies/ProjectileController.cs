@@ -33,11 +33,12 @@ public class ProjectileController : MonoBehaviour
 
     public static event Action<float> OnPlayerHit;
     public static event Action<Vector3, EnemyType> OnBulletDetonated;
+    public static event Action<Vector3, Quaternion,EnemyType> OnBulletFired;
     public static event Action<EnemyType> OnEnemyKilled;
     public static event Action OnProjectileReflected;
-    
 
- 
+
+
 
     public void SetUp(ProjectileManager manager, EnemyManager enemyManagerRef)
     {    
@@ -88,7 +89,8 @@ public class ProjectileController : MonoBehaviour
         gameObject.SetActive(true);
         projDir = dir;
         enemyColor = type;
-        
+        float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+        OnBulletFired.Invoke(transform.position, Quaternion.Euler(0,0, angle), type);
     }
 
     private void OnGameOver()
