@@ -24,12 +24,12 @@ public class EnemyWeaponController : MonoBehaviour
     [SerializeField]
     private float secondsOfChargeTimeBeforeShot =.5f;
 
-
     [SerializeField]
     private ProjectileType projectileThisShoots;
+    
     #endregion
 
-    public bool isShooting { get; private set; }
+    public bool IsShooting { get; private set; }
     private float currentFireTime;
     private Transform targetTr;
     private EnemyController enemyController;
@@ -41,7 +41,7 @@ public class EnemyWeaponController : MonoBehaviour
     public void SetUpWeapon(EnemyController enemyC, ProjectileManager projManager, Transform target)
     {
         enemyController = enemyC;
-        isShooting = false;
+        IsShooting = false;
         targetTr = target;
         projectileManager = projManager;
     }
@@ -50,7 +50,7 @@ public class EnemyWeaponController : MonoBehaviour
 
     private void Update()
     {
-        if (isShooting || !targetTr || enemyController.IsDead())
+        if (IsShooting || !targetTr || enemyController.IsDead())
             return;
 
         currentFireTime += Time.deltaTime;
@@ -74,7 +74,7 @@ public class EnemyWeaponController : MonoBehaviour
     private void StartChargingShot(Vector2 dir)
     {
         shotsInBustSoFar = 0;
-        isShooting = true;
+        IsShooting = true;
         Sequence firingSequence = DOTween.Sequence();
         firingSequence.Append(transform.DOScale(Vector3.one * 1.5f, secondsOfChargeTimeBeforeShot).OnComplete(() => {
             if (fireInForwardDirection)
@@ -85,6 +85,7 @@ public class EnemyWeaponController : MonoBehaviour
             }).SetEase(Ease.InSine));
         firingSequence.Append(transform.DOScale(Vector3.one , secondsOfChargeTimeBeforeShot /2f).SetEase(Ease.OutSine));
     }
+
     private void Shoot(Vector2 dir)
     {
         if (enemyController.IsDead()) return;
@@ -96,13 +97,13 @@ public class EnemyWeaponController : MonoBehaviour
 
         proj.ShootProjectile(transform.position, dir,enemyController.GetEnemyType());
 
-        if (shotsInBustSoFar < shotsInBurst)
+        if (shotsInBustSoFar < shotsInBurst && gameObject.activeSelf)
         {
             StartCoroutine(ShootAfterDelay(secondsBetweenShotsInBurst, dir));
         }
         else
         {
-            isShooting = false;
+            IsShooting = false;
         }
   
     }
@@ -110,6 +111,7 @@ public class EnemyWeaponController : MonoBehaviour
     IEnumerator ShootAfterDelay(float seconds, Vector2 dir)
     {
         yield return new WaitForSeconds(seconds);
+
         if (fireInForwardDirection)
         {
             dir = transform.right;

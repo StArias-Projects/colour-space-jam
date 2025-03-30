@@ -372,12 +372,16 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 199028520811864058, guid: b52ffce29aa895943b9a14d9079e3da0, type: 3}
-      propertyPath: m_TargetGraphic
-      value: 
+      propertyPath: m_Value
+      value: 0.491
+      objectReference: {fileID: 0}
+    - target: {fileID: 2548847232781594825, guid: b52ffce29aa895943b9a14d9079e3da0, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2548847232781594825, guid: b52ffce29aa895943b9a14d9079e3da0, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2720861416208288191, guid: b52ffce29aa895943b9a14d9079e3da0, type: 3}
       propertyPath: m_Name
@@ -385,7 +389,23 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2720861416208288191, guid: b52ffce29aa895943b9a14d9079e3da0, type: 3}
       propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2950313704324714966, guid: b52ffce29aa895943b9a14d9079e3da0, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: bb7547187a9980a4694d9a520186d028, type: 3}
+    - target: {fileID: 2950313704324714966, guid: b52ffce29aa895943b9a14d9079e3da0, type: 3}
+      propertyPath: m_Color.b
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2950313704324714966, guid: b52ffce29aa895943b9a14d9079e3da0, type: 3}
+      propertyPath: m_Color.g
+      value: 0.49212497
+      objectReference: {fileID: 0}
+    - target: {fileID: 2950313704324714966, guid: b52ffce29aa895943b9a14d9079e3da0, type: 3}
+      propertyPath: m_Color.r
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3543060112446143950, guid: b52ffce29aa895943b9a14d9079e3da0, type: 3}
       propertyPath: m_Pivot.x
@@ -466,6 +486,18 @@ PrefabInstance:
     - target: {fileID: 3543060112446143950, guid: b52ffce29aa895943b9a14d9079e3da0, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3822739440780267092, guid: b52ffce29aa895943b9a14d9079e3da0, type: 3}
+      propertyPath: m_Color.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3822739440780267092, guid: b52ffce29aa895943b9a14d9079e3da0, type: 3}
+      propertyPath: m_Color.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3822739440780267092, guid: b52ffce29aa895943b9a14d9079e3da0, type: 3}
+      propertyPath: m_Color.r
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

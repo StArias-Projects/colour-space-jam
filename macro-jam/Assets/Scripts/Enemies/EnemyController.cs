@@ -98,7 +98,7 @@ public class EnemyController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (!weaponController.isShooting)
+        if (!weaponController.IsShooting)
         {
             rigidBody.AddForce( currentSpeed * movementDir);
             RotateTowardsTarget(1);
@@ -116,6 +116,7 @@ public class EnemyController : MonoBehaviour
         float angle = Mathf.Atan2(directionToPlayer.y, directionToPlayer.x) * Mathf.Rad2Deg;
         transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(0, 0, angle), Time.fixedDeltaTime * rotateTowardsTargetSpeed * rotateSpeedMultiplier);
     }
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
         int mask = 1 << collision.gameObject.layer;
@@ -134,8 +135,6 @@ public class EnemyController : MonoBehaviour
     {
         return enemyType;
     }
-
-
 
     public void ChangeMovementDirection()
     {

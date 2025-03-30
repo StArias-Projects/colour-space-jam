@@ -55,7 +55,6 @@ public class EnemyManager : MonoBehaviour
     private Transform targetTr;
     private float currentTime = 0;
 
-
     [SerializeField]
     private Color enemyWhiteColor;
     [SerializeField]

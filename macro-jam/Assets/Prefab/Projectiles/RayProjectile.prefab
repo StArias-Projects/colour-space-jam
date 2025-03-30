@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8617010763394697626}
   - component: {fileID: 5718006639961653200}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: ProjectileLine
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -190,6 +190,13 @@ MonoBehaviour:
   attackPower: 1
   projectileType: 1
   lineRenderer: {fileID: 5718006639961653200}
+  distance: 100
+  playerMask:
+    serializedVersion: 2
+    m_Bits: 256
+  shieldMask:
+    serializedVersion: 2
+    m_Bits: 512
 --- !u!50 &5715583339131039679
 Rigidbody2D:
   serializedVersion: 5

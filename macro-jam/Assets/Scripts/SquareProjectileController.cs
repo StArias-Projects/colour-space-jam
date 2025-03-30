@@ -17,7 +17,6 @@ public class SquareProjectileController : ProjectileController
         sprite.color = enemyManager.GetEnemyColor(type);
     }
 
-
     private void FixedUpdate()
     {
         rigidBody.linearVelocity = projDir * speed;
@@ -26,25 +25,21 @@ public class SquareProjectileController : ProjectileController
         transform.rotation = Quaternion.Euler(0, 0, angle);
     }
 
-
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.TryGetComponent(out Shield shieldHit))
+        if (collision.TryGetComponent(out Shield shieldHit) && shieldHit.color == EnemyColor)
         {
-            if (shieldHit.color == enemyColor)
-            {
-                shieldHit.OnHit();
-                projDir = shieldHit.transform.up;
-                speed = speedAfterBounced;
-                isBounced = true;
+            shieldHit.OnHit();
+            projDir = shieldHit.transform.up;
+            speed = speedAfterBounced;
+            isBounced = true;
 
-                ProjectileBounceEffect();
-                TriggerOnProjectileReflected();
+            ProjectileBounceEffect();
+            TriggerOnProjectileReflected();
 
-                float angle = Mathf.Atan2(shieldHit.transform.up.y, shieldHit.transform.up.x) * Mathf.Rad2Deg;
+            float angle = Mathf.Atan2(shieldHit.transform.up.y, shieldHit.transform.up.x) * Mathf.Rad2Deg;
 
-                vfxManager.PlayFiringVFX(transform.position,Quaternion.Euler(0,0, angle), enemyColor);
-            }
+            vfxManager.PlayFiringVFX(transform.position, Quaternion.Euler(0, 0, angle), EnemyColor);
         }
         else if (isBounced && collision.TryGetComponent(out EnemyController enemy))
         {
@@ -55,6 +50,7 @@ public class SquareProjectileController : ProjectileController
                 EnemyType enemyType = enemy.GetEnemyType();
                 TriggerOnEnemyKilled(enemyType);
             }
+
             projectileManager.ResetProjectile(this, projectileType);
         }
         else if (!isBounced && collision.TryGetComponent(out PlayerManager player))
@@ -63,7 +59,6 @@ public class SquareProjectileController : ProjectileController
             TriggerOnPlayerHit(attackPower);
             projectileManager.ResetProjectile(this, projectileType);
             player.ReceiveDamage(attackPower);
-
         }
     }
 

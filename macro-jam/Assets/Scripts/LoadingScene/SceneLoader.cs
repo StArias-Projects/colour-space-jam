@@ -20,6 +20,7 @@ public class SceneLoader : MonoBehaviour
     private void Awake()
     {
         gameManager = GameManager.GetInstance();
+        loadingCanvas.SetActive(false);
         loadingBar.maxValue = 100f;
     }
 
@@ -29,7 +30,6 @@ public class SceneLoader : MonoBehaviour
 
         scenesLoading.Add(SceneManager.UnloadSceneAsync((int)SceneID.MainMenu));
         scenesLoading.Add(SceneManager.LoadSceneAsync((int)SceneID.GamePlay, LoadSceneMode.Additive));
-        scenesLoading.Add(SceneManager.LoadSceneAsync((int)SceneID.GameOver, LoadSceneMode.Additive));
 
         StartCoroutine(UpdateProgress());
     }
@@ -39,7 +39,6 @@ public class SceneLoader : MonoBehaviour
         loadingCanvas.SetActive(true);
 
         scenesLoading.Add(SceneManager.UnloadSceneAsync((int)SceneID.GamePlay));
-        scenesLoading.Add(SceneManager.UnloadSceneAsync((int)SceneID.GameOver));
         scenesLoading.Add(SceneManager.LoadSceneAsync((int)SceneID.MainMenu, LoadSceneMode.Additive));
 
         StartCoroutine(UpdateProgress());
@@ -48,6 +47,7 @@ public class SceneLoader : MonoBehaviour
     public IEnumerator UpdateProgress()
     {
         bool allScenesDone = false;
+        loadingBar.value = 0f;
 
         while (!allScenesDone)
         {

@@ -98,9 +98,9 @@ GameObject:
   m_Component:
   - component: {fileID: 3842573797170238595}
   - component: {fileID: 4993525481252309011}
+  - component: {fileID: 954359727576610893}
   - component: {fileID: 2168393888267659187}
   - component: {fileID: 8510139972423578055}
-  - component: {fileID: 954359727576610893}
   m_Layer: 6
   m_Name: BigSquareEnemy
   m_TagString: Untagged
@@ -149,6 +149,24 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 512
   rotateTowardsTargetSpeed: 0
+--- !u!114 &954359727576610893
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2970768838259694941}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f46016a28e933646a9a1102716e2d57, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  fireRate: 0.45
+  shotsInBurst: 3
+  secondsBetweenShotsInBurst: 0.2
+  fireInForwardDirection: 0
+  secondsOfChargeTimeBeforeShot: 0.5
+  projectileThisShoots: 0
 --- !u!50 &2168393888267659187
 Rigidbody2D:
   serializedVersion: 5
@@ -222,24 +240,6 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 1.0779927, y: 1.0837448}
   m_EdgeRadius: 0
---- !u!114 &954359727576610893
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2970768838259694941}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9f46016a28e933646a9a1102716e2d57, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  fireRate: 0.45
-  shotsInBurst: 3
-  secondsBetweenShotsInBurst: 0.2
-  fireInForwardDirection: 0
-  secondsOfChargeTimeBeforeShot: 0.5
-  projectileThisShoots: 0
 --- !u!1001 &6384034381797380579
 PrefabInstance:
   m_ObjectHideFlags: 0

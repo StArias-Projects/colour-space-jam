@@ -22,7 +22,7 @@ public class ProjectileController : MonoBehaviour
     protected Vector2 projDir;
     protected VFXManager vfxManager;
 
-    public EnemyType enemyColor { get; private set; }
+    public EnemyType EnemyColor { get; private set; }
     
     protected bool isBounced = false;
 
@@ -31,9 +31,6 @@ public class ProjectileController : MonoBehaviour
     public static event Action<Vector3, Quaternion,EnemyType> OnBulletFired;
     public static event Action<EnemyType> OnEnemyKilled;
     public static event Action OnProjectileReflected;
-
-
-
 
     public void SetUp(ProjectileManager manager, EnemyManager enemyManagerRef, VFXManager vfxManagerRef)
     {    
@@ -63,8 +60,6 @@ public class ProjectileController : MonoBehaviour
         ProjectileManager.OnGameOver -= OnGameOver;
     }
 
-   
-
     void Update()
     {
         if (!projectileManager)
@@ -75,16 +70,12 @@ public class ProjectileController : MonoBehaviour
             projectileManager.ResetProjectile(this, projectileType);
     }
 
-   
-
-    
-
     public virtual void ShootProjectile(Vector2 pos, Vector2 dir, EnemyType type)
     {
         transform.position = pos;
         gameObject.SetActive(true);
         projDir = dir;
-        enemyColor = type;
+        EnemyColor = type;
         float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
         OnBulletFired.Invoke(transform.position, Quaternion.Euler(0,0, angle), type);
     }
@@ -96,21 +87,22 @@ public class ProjectileController : MonoBehaviour
 
         projectileManager.ResetProjectile(this, projectileType);
     }
-
-
+    
     protected void TriggerOnPlayerHit(float amount)
     {
         OnPlayerHit?.Invoke(amount);
     }
+    
     protected void TriggerOnBulletDetonated(Vector3 explosionPos)
     {
-        OnBulletDetonated?.Invoke(explosionPos, enemyColor);
+        OnBulletDetonated?.Invoke(explosionPos, EnemyColor);
     }
  
     protected void TriggerOnEnemyKilled(EnemyType enemyType)
     {
         OnEnemyKilled?.Invoke(enemyType);
     }
+ 
     protected void TriggerOnProjectileReflected()
     {
         OnProjectileReflected?.Invoke();

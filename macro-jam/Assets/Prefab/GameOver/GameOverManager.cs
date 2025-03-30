@@ -30,16 +30,21 @@ public class GameOverManager : MonoBehaviour
     private GameManager gameManager;
     private Stats gameStats;
 
-    public void SetUp(Stats stats)
+    public void SetUp()
     {
-        gameOverCanvas.SetActive(true);
-
         gameManager = GameManager.GetInstance();
-        gameStats = stats;
+        gameStats.enemiesKilled = new();
 
         tryAgainButton.onClick.AddListener(() => TryAgain());
         mainMenuButton.onClick.AddListener(() => ReturnToMainMenu());
 
+        UpdateCanvas();
+    }
+
+    public void GameOver(Stats stats)
+    {
+        gameStats = stats;
+        gameOverCanvas.SetActive(true);
         UpdateCanvas();
     }
 

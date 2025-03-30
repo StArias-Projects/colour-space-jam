@@ -42,7 +42,10 @@ public class GameManager : MonoBehaviour
         }
 
         if (gamePlayManager)
+        {
             gamePlayManager.SetUp();
+            gameOverManager.SetUp();
+        }
     }
 
     private void MoveInstanceData()
@@ -72,8 +75,6 @@ public class GameManager : MonoBehaviour
             initialScene = SceneID.MainMenu;
         else if (gamePlayManager)
             initialScene = SceneID.GamePlay;
-        else if (gameOverManager)
-            initialScene = SceneID.GameOver;
     }
 
     /// <summary>
@@ -87,9 +88,6 @@ public class GameManager : MonoBehaviour
         {
             case SceneID.LoadingScene:
                 SceneManager.LoadSceneAsync((int)SceneID.MainMenu, LoadSceneMode.Additive);
-                break;
-            case SceneID.GameOver:
-                gameOverManager.SetUp(gameStats);
                 break;
             default:
                 break;
@@ -116,15 +114,14 @@ public class GameManager : MonoBehaviour
     public void GameOver(Stats stats)
     {
         gameStats = stats;
-        gameOverManager.SetUp(gameStats);
+        gameOverManager.GameOver(gameStats);
     }
 
     public void TryAgain()
     {
-
         InitStats();
         gamePlayManager.ResetGame(gameStats);
-        Scene scene = SceneManager.GetActiveScene(); SceneManager.LoadScene(scene.name);
+        //Scene scene = SceneManager.GetActiveScene(); SceneManager.LoadScene(scene.name);
     }
 
     public void ChangeScene(int sceneIndex)

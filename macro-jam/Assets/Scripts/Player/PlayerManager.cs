@@ -17,13 +17,18 @@ public class PlayerManager : MonoBehaviour
     private float health = 0;
     private GamePlayManager gamePlayManager;
     private bool isDeathFinished = false;
-    private Vector3 initialTr;
+    private Vector3 initialPos;
+    private Quaternion initialRotation;
+    private Vector3 initialScale;
     public static event Action<float> OnPlayerTakeDamage;
 
-    public void SetUp(GamePlayManager gpManager) 
+    public void SetUp(GamePlayManager gpManager)
     {
         health = maxHealth;
-        initialTr = transform.position;
+        initialPos = transform.position;
+        initialRotation = transform.rotation;
+        initialScale = transform.localScale;
+
         gamePlayManager = gpManager;
         playerController.SetUp(this);
         shieldController.SetUp(this);
@@ -47,7 +52,7 @@ public class PlayerManager : MonoBehaviour
     }
     public float GetPercentHealth()
     {
-        return health/maxHealth;
+        return health / maxHealth;
     }
 
     public float GetMaxHealth()
@@ -66,7 +71,7 @@ public class PlayerManager : MonoBehaviour
     public void ReceiveDamage(float damage)
     {
         health -= damage;
-        if(damage > 0)
+        if (damage > 0)
         {
             OnPlayerTakeDamage?.Invoke(damage);
         }
@@ -78,13 +83,12 @@ public class PlayerManager : MonoBehaviour
         }
     }
 
-    public void StartDeathAnimation() 
+    public void StartDeathAnimation()
     {
-        // TODO: This is temporal here and it should go at the end of the animation
         transform.DOScale(Vector3.zero, 1f).OnComplete(FinishDeathAnimation);
     }
 
-    public void FinishDeathAnimation() 
+    public void FinishDeathAnimation()
     {
         isDeathFinished = true;
     }
@@ -93,11 +97,12 @@ public class PlayerManager : MonoBehaviour
     {
         isDeathFinished = false;
         health = maxHealth;
-        transform.position = initialTr;
+        transform.SetPositionAndRotation(initialPos, initialRotation);
+        transform.localScale = initialScale;
     }
 
-
-    public bool IsDeathAnimationFinished() {
-        return isDeathFinished; 
+    public bool IsDeathAnimationFinished()
+    {
+        return isDeathFinished;
     }
 }
