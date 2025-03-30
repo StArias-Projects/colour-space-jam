@@ -37,6 +37,7 @@ public class GameManager : MonoBehaviour
             InitStats();
             CalculateInitScene();
             LoadFirstScene();
+
             DontDestroyOnLoad(gameObject);
         }
 

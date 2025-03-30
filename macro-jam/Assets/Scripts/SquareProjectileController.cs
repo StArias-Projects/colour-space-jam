@@ -1,6 +1,4 @@
 using UnityEngine;
-using static UnityEditor.Rendering.CameraUI;
-using static UnityEngine.Rendering.DebugUI;
 
 public class SquareProjectileController : ProjectileController
 {
