@@ -142,6 +142,10 @@ public class GamePlayManager : MonoBehaviour
         gameState = GameState.Playing;
         gameManager.ChangeCursorTexture(gameState);
 
+        gamePlayMusicEmitter.Stop();
+        pauseMusicEmitter.Stop();
+        gameOverMusicEmitter.Play();
+
         playerManager.ResetPlayer();
         hudManager.ResetHUD(playerManager.GetMaxHealth());
     }
