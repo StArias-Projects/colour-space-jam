@@ -19,6 +19,9 @@ public class SquareProjectileController : ProjectileController
 
     private void FixedUpdate()
     {
+        if (enemyManager.GetGameState() != GameState.Playing)
+            return;
+
         rigidBody.linearVelocity = projDir * speed;
 
         float angle = Mathf.Atan2(projDir.y, projDir.x) * Mathf.Rad2Deg;

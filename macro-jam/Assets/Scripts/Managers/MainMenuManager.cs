@@ -10,6 +10,9 @@ public class MainMenuManager : MonoBehaviour
     [SerializeField]
     private StudioEventEmitter startGameSFX;
 
+    [SerializeField]
+    private Button quitGameButton;
+
     private void Start()
     {
         startGameButton.onClick.AddListener(() =>
@@ -17,5 +20,14 @@ public class MainMenuManager : MonoBehaviour
             GameManager.GetInstance().LoadGame();
             startGameSFX.Play();
         });
+
+#if UNITY_WEBGL
+        quitGameButton.gameObject.SetActive(false);
+#else
+        quitGameButton.onClick.AddListener(() =>
+        {
+            GameManager.GetInstance().QuitGame();
+        });
+#endif
     }
 }

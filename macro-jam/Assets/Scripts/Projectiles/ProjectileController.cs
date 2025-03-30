@@ -17,6 +17,8 @@ public class ProjectileController : MonoBehaviour
     protected ProjectileType projectileType;
 
     private float currentLifeTime = 0;
+    private Vector2 velocityBeforPaused = Vector2.zero;
+
     protected ProjectileManager projectileManager;
     protected EnemyManager enemyManager;
     protected Vector2 projDir;
@@ -46,23 +48,21 @@ public class ProjectileController : MonoBehaviour
 
     private void OnEnable()
     {
-        if (!projectileManager)
-            return;
-
         ProjectileManager.OnGameOver += OnGameOver;
+        GamePlayManager.OnGamePaused += OnGamePaused;
+        GamePlayManager.OnGameContinued += OnGameContinued;
     }
 
     private void OnDisable()
     {
-        if (!projectileManager)
-            return;
-
         ProjectileManager.OnGameOver -= OnGameOver;
+        GamePlayManager.OnGamePaused -= OnGamePaused;
+        GamePlayManager.OnGameContinued -= OnGameContinued;
     }
 
     void Update()
     {
-        if (!projectileManager)
+        if (!projectileManager || enemyManager.GetGameState() != GameState.Playing)
             return;
 
         currentLifeTime += Time.deltaTime;
@@ -106,5 +106,16 @@ public class ProjectileController : MonoBehaviour
     protected void TriggerOnProjectileReflected()
     {
         OnProjectileReflected?.Invoke();
+    }
+
+    protected virtual void OnGamePaused() 
+    {
+        velocityBeforPaused = rigidBody.linearVelocity;
+        rigidBody.linearVelocity = Vector2.zero;
+    }
+
+    protected virtual void OnGameContinued() 
+    {
+        rigidBody.linearVelocity = velocityBeforPaused;
     }
 }

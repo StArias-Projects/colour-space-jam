@@ -16,7 +16,7 @@
                 },
                 {
                     "name": "LeftClick",
-                    "type": "Value",
+                    "type": "Button",
                     "id": "655e74d0-8189-4316-8bc2-66b0048be06e",
                     "expectedControlType": "",
                     "processors": "",
@@ -27,6 +27,15 @@
                     "name": "RightClick",
                     "type": "Button",
                     "id": "68f6d3a8-3b15-4277-80d8-136eb059a951",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Pause",
+                    "type": "Button",
+                    "id": "928078bc-2599-4762-bc89-4adc7c075962",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -108,6 +117,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "RightClick",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "62eb72d9-a3cd-422f-b4cf-5fea202a3d93",
+                    "path": "<Keyboard>/escape",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Pause",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

@@ -109,4 +109,9 @@ public class ProjectileManager : MonoBehaviour
     {
         OnGameOver?.Invoke();
     }
+
+    public GameState GetGameState() 
+    {
+        return enemyManager.GetGameState();
+    }
 }

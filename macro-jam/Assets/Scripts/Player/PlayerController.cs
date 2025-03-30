@@ -1,6 +1,4 @@
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.InputSystem;
 using static UnityEngine.InputSystem.InputAction;
 
 public class PlayerController : MonoBehaviour
@@ -13,6 +11,16 @@ public class PlayerController : MonoBehaviour
     // In case we want to slow down the player, we need this
     private float currentMaxSpeed = 0;
     private PlayerManager _player;
+
+    private void OnEnable()
+    {
+        GamePlayManager.OnGamePaused += OnGamePaused;
+    }
+
+    private void OnDisable()
+    {
+        GamePlayManager.OnGamePaused -= OnGamePaused;
+    }
 
     public void SetUp(PlayerManager player)
     {
@@ -42,5 +50,10 @@ public class PlayerController : MonoBehaviour
             currentVelocity.y = currentMaxSpeed;
 
         _rb.linearVelocity = currentVelocity;
+    }
+
+    private void OnGamePaused() 
+    {
+        _rb.linearVelocity = Vector2.zero;
     }
 }

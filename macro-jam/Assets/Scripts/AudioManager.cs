@@ -14,10 +14,12 @@ public class AudioManager : MonoBehaviour
     [SerializeField]
     private Slider sfxSlider;
 
-    FMOD.Studio.Bus musicBus;
-    FMOD.Studio.Bus sfxBus;
+    private static FMOD.Studio.Bus musicBus;
+    private static FMOD.Studio.Bus sfxBus;
 
     private static AudioManager Instance;
+    private static float musicVolume;
+    private static float sfxVolume;
 
     public AudioManager GetInstance()
     {
@@ -39,6 +41,7 @@ public class AudioManager : MonoBehaviour
             musicBus = RuntimeManager.GetBus("bus:/Music");
             sfxBus = RuntimeManager.GetBus("bus:/SFX");
 
+            musicVolume = sfxVolume = startingVolume;
             DontDestroyOnLoad(gameObject);
         }
 
@@ -50,27 +53,27 @@ public class AudioManager : MonoBehaviour
         if (musicSlider)
         {
             musicSlider.maxValue = 1f;
-            musicSlider.value = startingVolume;
-            SetMusicVolume(startingVolume);
-            musicSlider.onValueChanged.AddListener(delegate { SetMusicVolume(musicSlider.value); });
+            musicSlider.value = musicVolume;
+            musicBus.setVolume(musicVolume);
+
+            musicSlider.onValueChanged.AddListener((float value) =>
+            {
+                musicVolume = value;
+                musicBus.setVolume(musicVolume);
+            });
         }
 
         if (sfxSlider)
         {
             sfxSlider.maxValue = 1f;
-            sfxSlider.value = startingVolume;
-            SetSFXVolume(startingVolume);
-            sfxSlider.onValueChanged.AddListener(delegate { SetSFXVolume(sfxSlider.value); });
+            sfxSlider.value = sfxVolume;
+            sfxBus.setVolume(sfxVolume);
+
+            sfxSlider.onValueChanged.AddListener((float value) =>
+            {
+                sfxVolume = value;
+                sfxBus.setVolume(sfxVolume);
+            });
         }
-    }
-
-    public void SetMusicVolume(float volume)
-    {
-        musicBus.setVolume(volume);
-    }
-
-    public void SetSFXVolume(float volume)
-    {
-        sfxBus.setVolume(volume);
     }
 }

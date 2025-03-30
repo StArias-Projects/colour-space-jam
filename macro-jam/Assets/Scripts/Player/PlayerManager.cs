@@ -1,7 +1,7 @@
 using DG.Tweening;
 using System;
-using System.Collections;
 using UnityEngine;
+using static UnityEngine.InputSystem.InputAction;
 
 public class PlayerManager : MonoBehaviour
 {
@@ -50,6 +50,7 @@ public class PlayerManager : MonoBehaviour
     {
         return health;
     }
+
     public float GetPercentHealth()
     {
         return health / maxHealth;
@@ -67,6 +68,13 @@ public class PlayerManager : MonoBehaviour
 
     #endregion
 
+    public void OnPause(CallbackContext context)
+    {
+        if (gamePlayManager.GetGameState() != GameState.Playing)
+            return;
+
+        gamePlayManager.PauseGame();
+    }
 
     public void ReceiveDamage(float damage)
     {

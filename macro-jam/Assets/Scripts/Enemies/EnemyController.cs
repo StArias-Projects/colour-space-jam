@@ -10,8 +10,6 @@ public class EnemyController : MonoBehaviour
 {
     #region Editor Variables
 
-   
-
     private EnemyType enemyType;
 
     [SerializeField]
@@ -58,6 +56,7 @@ public class EnemyController : MonoBehaviour
     private Vector2 movementDir = Vector2.zero;
     private List<Collider2D> directionPoints = new();
     private EnemyManager enemyManager;
+    private Vector2 velocityBeforePause = Vector2.zero;
 
     #endregion
 
@@ -89,15 +88,22 @@ public class EnemyController : MonoBehaviour
     private void OnEnable()
     {
         EnemyManager.OnGameOver += OnGameOver;
+        GamePlayManager.OnGamePaused += OnGamePaused;
+        GamePlayManager.OnGameContinued -= OnGameContinued;
     }
 
     private void OnDisable()
     {
         EnemyManager.OnGameOver -= OnGameOver;
+        GamePlayManager.OnGamePaused -= OnGamePaused;
+        GamePlayManager.OnGameContinued -= OnGameContinued;
     }
 
     private void FixedUpdate()
     {
+        if (!enemyManager || enemyManager.GetGameState() != GameState.Playing)
+            return;
+
         if (!weaponController.IsShooting)
         {
             rigidBody.AddForce( currentSpeed * movementDir);
@@ -202,5 +208,16 @@ public class EnemyController : MonoBehaviour
     public bool IsDead()
     {
         return isDead;
+    }
+
+    private void OnGamePaused() 
+    {
+        velocityBeforePause = rigidBody.linearVelocity;
+        rigidBody.linearVelocity = Vector2.zero;
+    }
+
+    private void OnGameContinued() 
+    {
+        rigidBody.linearVelocity = velocityBeforePause;
     }
 }

@@ -29,9 +29,6 @@ public class EnemyManager : MonoBehaviour
 
     #region Editor Variables
 
-
-    
-
     [SerializeField]
     [Tooltip("Enemies per second")]
     private float generationRate;
@@ -170,5 +167,10 @@ public class EnemyManager : MonoBehaviour
     public void GameOver()
     {
         OnGameOver?.Invoke();
+    }
+
+    public GameState GetGameState() 
+    {
+        return gamePlayManager.GetGameState();
     }
 }

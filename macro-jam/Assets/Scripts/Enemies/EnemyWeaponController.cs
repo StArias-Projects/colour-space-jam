@@ -14,7 +14,7 @@ public class EnemyWeaponController : MonoBehaviour
     private float fireRate;
 
     [SerializeField]
-    private int shotsInBurst =1;
+    private int shotsInBurst = 1;
 
     [SerializeField]
     private float secondsBetweenShotsInBurst = .1f;
@@ -22,11 +22,11 @@ public class EnemyWeaponController : MonoBehaviour
     [SerializeField]
     bool fireInForwardDirection = false;
     [SerializeField]
-    private float secondsOfChargeTimeBeforeShot =.5f;
+    private float secondsOfChargeTimeBeforeShot = .5f;
 
     [SerializeField]
     private ProjectileType projectileThisShoots;
-    
+
     #endregion
 
     public bool IsShooting { get; private set; }
@@ -50,7 +50,7 @@ public class EnemyWeaponController : MonoBehaviour
 
     private void Update()
     {
-        if (IsShooting || !targetTr || enemyController.IsDead())
+        if (IsShooting || !targetTr || enemyController.IsDead() || projectileManager.GetGameState() != GameState.Playing)
             return;
 
         currentFireTime += Time.deltaTime;
@@ -60,8 +60,8 @@ public class EnemyWeaponController : MonoBehaviour
         {
             if (targetTr)
             {
-              Vector2 dir = (targetTr.position - transform.position).normalized;
-               StartChargingShot(dir);
+                Vector2 dir = (targetTr.position - transform.position).normalized;
+                StartChargingShot(dir);
                 currentFireTime = 0;
             }
             else
@@ -76,26 +76,27 @@ public class EnemyWeaponController : MonoBehaviour
         shotsInBustSoFar = 0;
         IsShooting = true;
         Sequence firingSequence = DOTween.Sequence();
-        firingSequence.Append(transform.DOScale(Vector3.one * 1.5f, secondsOfChargeTimeBeforeShot).OnComplete(() => {
+        firingSequence.Append(transform.DOScale(Vector3.one * 1.5f, secondsOfChargeTimeBeforeShot).OnComplete(() =>
+        {
             if (fireInForwardDirection)
             {
                 dir = transform.right;
             }
             Shoot(dir);
-            }).SetEase(Ease.InSine));
-        firingSequence.Append(transform.DOScale(Vector3.one , secondsOfChargeTimeBeforeShot /2f).SetEase(Ease.OutSine));
+        }).SetEase(Ease.InSine));
+        firingSequence.Append(transform.DOScale(Vector3.one, secondsOfChargeTimeBeforeShot / 2f).SetEase(Ease.OutSine));
     }
 
     private void Shoot(Vector2 dir)
     {
         if (enemyController.IsDead()) return;
-         
+
         shotsInBustSoFar += 1;
         ProjectileController proj = projectileManager.GetProjectile(projectileThisShoots);
         if (!proj)
             return;
 
-        proj.ShootProjectile(transform.position, dir,enemyController.GetEnemyType());
+        proj.ShootProjectile(transform.position, dir, enemyController.GetEnemyType());
 
         if (shotsInBustSoFar < shotsInBurst && gameObject.activeSelf)
         {
@@ -105,7 +106,6 @@ public class EnemyWeaponController : MonoBehaviour
         {
             IsShooting = false;
         }
-  
     }
 
     IEnumerator ShootAfterDelay(float seconds, Vector2 dir)

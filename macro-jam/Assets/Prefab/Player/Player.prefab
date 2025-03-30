@@ -843,7 +843,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2487f2341d7c8b04b9f1d0795a6bc97c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 100
+  maxHealth: 10
   playerController: {fileID: 2020922957658639970}
   shieldController: {fileID: 1149084682857446316}
 --- !u!50 &7013774170356839396

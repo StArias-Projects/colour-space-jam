@@ -21,16 +21,16 @@ public class ShieldController : MonoBehaviour
 
     private PlayerManager _player;
 
-    public void SetUp(PlayerManager player) 
+    public void SetUp(PlayerManager player)
     {
         _player = player;
-        
     }
 
     private void Start()
     {
         SetHighlightedShield();
     }
+
     private void Update()
     {
         if (!_player || _player.GetGameState() != GameState.Playing)
@@ -55,18 +55,18 @@ public class ShieldController : MonoBehaviour
 
     public void OnLeftClick(CallbackContext context)
     {
-        if (context.started)
-        {
-            Rotate(false);
-        }
+        if (!_player || _player.GetGameState() != GameState.Playing || !context.started)
+            return;
+
+        Rotate(false);
     }
 
     public void OnRightClick(CallbackContext context)
     {
-        if (context.started)
-        {
-            Rotate(true);
-        }
+        if (!_player || _player.GetGameState() != GameState.Playing || !context.started)
+            return;
+
+        Rotate(true);
     }
 
     private void Rotate(bool left)
@@ -84,7 +84,7 @@ public class ShieldController : MonoBehaviour
                 _timesShieldsRotated = 1;
             }
         }
-        
+
         _timesShieldsRotated %= 2;
         _rotateTween = clickRotator.DOLocalRotate(_timesShieldsRotated * new Vector3(0, 0, 180), secondsToRotateShieldsOnClick);
         SetHighlightedShield();

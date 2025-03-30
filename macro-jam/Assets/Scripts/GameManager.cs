@@ -14,7 +14,7 @@ public class GameManager : MonoBehaviour
     private GamePlayManager gamePlayManager;
 
     [SerializeField]
-    private GameOverManager gameOverManager;
+    private CursorManager cursorManager;
 
     private static GameManager Instance;
     private static Stats gameStats;
@@ -44,7 +44,6 @@ public class GameManager : MonoBehaviour
         if (gamePlayManager)
         {
             gamePlayManager.SetUp();
-            gameOverManager.SetUp();
         }
     }
 
@@ -54,13 +53,11 @@ public class GameManager : MonoBehaviour
             Instance.mainMenuManager = mainMenuManager;
         if (gamePlayManager)
             Instance.gamePlayManager = gamePlayManager;
-        if (gameOverManager)
-            Instance.gameOverManager = gameOverManager;
 
         Destroy(gameObject);
     }
 
-    private void InitStats()
+    public void InitStats()
     {
         gameStats.time = 0;
         gameStats.projectilesReflected = 0;
@@ -84,6 +81,9 @@ public class GameManager : MonoBehaviour
     /// </summary>
     private void LoadFirstScene()
     {
+        if (cursorManager)
+            cursorManager.ChangeCursorTexture(GameState.Opening);
+
         switch (initialScene)
         {
             case SceneID.LoadingScene:
@@ -92,7 +92,6 @@ public class GameManager : MonoBehaviour
             default:
                 break;
         }
-
     }
 
     public void LoadGame()
@@ -111,23 +110,27 @@ public class GameManager : MonoBehaviour
             ChangeScene((int)SceneID.MainMenu);
     }
 
-    public void GameOver(Stats stats)
-    {
-        gameStats = stats;
-        gameOverManager.GameOver(gameStats);
-    }
-
-    public void TryAgain()
-    {
-        InitStats();
-        gamePlayManager.ResetGame(gameStats);
-        //Scene scene = SceneManager.GetActiveScene(); SceneManager.LoadScene(scene.name);
-    }
-
     public void ChangeScene(int sceneIndex)
     {
         SceneManager.LoadScene(sceneIndex);
     }
 
     public Stats GetGamestats() { return gameStats; }
+
+    public void ChangeCursorTexture(GameState state)
+    {
+        if (!cursorManager)
+            return;
+
+        cursorManager.ChangeCursorTexture(state);
+    }
+
+    public void QuitGame()
+    {
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.ExitPlaymode();
+#else
+    Application.Quit();
+#endif
+    }
 }

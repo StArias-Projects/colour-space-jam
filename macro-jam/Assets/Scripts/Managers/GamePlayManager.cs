@@ -1,3 +1,5 @@
+using DG.Tweening;
+using FMODUnity;
 using System;
 using System.Collections;
 using UnityEngine;
@@ -6,8 +8,16 @@ public class GamePlayManager : MonoBehaviour
 {
     #region Editor Variables
 
+    [Header("Managers")]
+
     [SerializeField]
     private PlayerManager playerManager;
+
+    [SerializeField]
+    private GameOverManager gameOverManager;
+
+    [SerializeField]
+    private PauseManager pauseManager;
 
     [SerializeField]
     private EnemyManager enemyManager;
@@ -23,6 +33,16 @@ public class GamePlayManager : MonoBehaviour
 
     [SerializeField]
     private VFXManager vfxManager;
+
+    [Header("Audio")]
+    [SerializeField]
+    private StudioEventEmitter gamePlayMusicEmitter;
+
+    [SerializeField]
+    private StudioEventEmitter pauseMusicEmitter;
+
+    [SerializeField]
+    private StudioEventEmitter gameOverMusicEmitter;
 
     [Header("Game Rythm Speed")]
     [SerializeField]
@@ -48,6 +68,8 @@ public class GamePlayManager : MonoBehaviour
     private GameManager gameManager;
 
     public static event Action OnGameOver;
+    public static event Action OnGamePaused;
+    public static event Action OnGameContinued;
     #endregion
 
     #region Unity Callbacks
@@ -76,6 +98,8 @@ public class GamePlayManager : MonoBehaviour
         projectileManager.SetUp(enemyManager,vfxManager);
         cameraController.SetUp(this);
         vfxManager.SetUp(this, enemyManager);
+        pauseManager.SetUp(this);
+        gameOverManager.SetUp(this);
 
         StartGame();
     }
@@ -83,12 +107,17 @@ public class GamePlayManager : MonoBehaviour
     private void StartGame()
     {
         gameState = GameState.Playing;
+        gameManager.ChangeCursorTexture(gameState);
         currentSpeed = minSpeed;
+
+        gamePlayMusicEmitter.Play();
+        pauseMusicEmitter.Stop();
     }
 
     public IEnumerator GameOver()
     {
         gameState = GameState.GameOver;
+        gameManager.ChangeCursorTexture(gameState);
 
         gameStats.time = (uint)currentGameTime;
         currentSpeed = 0;
@@ -98,21 +127,54 @@ public class GamePlayManager : MonoBehaviour
         
         yield return new WaitUntil(() => playerManager.IsDeathAnimationFinished());
 
-        gameManager.GameOver(gameStats);
+        gamePlayMusicEmitter.Stop();
+        pauseMusicEmitter.Stop();
+        gameOverMusicEmitter.Play();
+
+        gameOverManager.GameOver(gameStats);
     }
 
-    public void ResetGame(Stats stats) 
+    public void TryAgain() 
     {
+        gameManager.InitStats();
         currentGameTime = 0;
-        gameStats = stats;
+        gameStats = gameManager.GetGamestats();
         gameState = GameState.Playing;
+        gameManager.ChangeCursorTexture(gameState);
+
         playerManager.ResetPlayer();
         hudManager.ResetHUD(playerManager.GetMaxHealth());
     }
 
+    public void ReturnToMainMenu() 
+    {
+        gamePlayMusicEmitter.Stop();
+        pauseMusicEmitter.Stop();
+        gameOverMusicEmitter.Stop();
+
+        gameManager.ReturnToMainMenu();
+    }
+
     public void PauseGame()
     {
+        gameState = GameState.Pause;
+        gameManager.ChangeCursorTexture(gameState);
 
+        gamePlayMusicEmitter.EventInstance.setPaused(true);
+        pauseMusicEmitter.Play();
+
+        OnGamePaused?.Invoke();
+    }
+
+    public void ContinueGame() 
+    {
+        gameState = GameState.Playing;
+        gameManager.ChangeCursorTexture(gameState);
+
+        gamePlayMusicEmitter.EventInstance.setPaused(false);
+        pauseMusicEmitter.Stop();
+
+        OnGameContinued?.Invoke();
     }
 
     public GameState GetGameState()

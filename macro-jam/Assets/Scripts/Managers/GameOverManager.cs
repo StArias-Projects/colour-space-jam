@@ -27,12 +27,12 @@ public class GameOverManager : MonoBehaviour
     [SerializeField]
     private TextMeshProUGUI favouriteEnemyText;
 
-    private GameManager gameManager;
+    private GamePlayManager gamePlayManager;
     private Stats gameStats;
 
-    public void SetUp()
+    public void SetUp(GamePlayManager manager)
     {
-        gameManager = GameManager.GetInstance();
+        gamePlayManager = manager;
         gameStats.enemiesKilled = new();
 
         tryAgainButton.onClick.AddListener(() => TryAgain());
@@ -79,12 +79,12 @@ public class GameOverManager : MonoBehaviour
     private void TryAgain()
     {
         gameOverCanvas.SetActive(false);
-        gameManager.TryAgain();
+        gamePlayManager.TryAgain();
     }
 
     private void ReturnToMainMenu()
     {
         gameOverCanvas.SetActive(false);
-        gameManager.ReturnToMainMenu();
+        gamePlayManager.ReturnToMainMenu();
     }
 }
