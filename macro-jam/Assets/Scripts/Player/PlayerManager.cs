@@ -1,3 +1,4 @@
+using DG.Tweening;
 using System;
 using System.Collections;
 using UnityEngine;
@@ -44,6 +45,10 @@ public class PlayerManager : MonoBehaviour
     {
         return health;
     }
+    public float GetPercentHealth()
+    {
+        return health/maxHealth;
+    }
 
     public float GetMaxHealth()
     {
@@ -76,7 +81,7 @@ public class PlayerManager : MonoBehaviour
     public void StartDeathAnimation() 
     {
         // TODO: This is temporal here and it should go at the end of the animation
-        FinishDeathAnimation();
+        transform.DOScale(Vector3.zero, 1f).OnComplete(FinishDeathAnimation);
     }
 
     public void FinishDeathAnimation() 

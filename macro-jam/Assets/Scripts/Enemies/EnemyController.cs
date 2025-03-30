@@ -11,6 +11,8 @@ public class EnemyController : MonoBehaviour
     #region Editor Variables
 
     [SerializeField]
+    private ProjectileType projectileThisShoots;
+
     private EnemyType enemyType;
 
     [SerializeField]
@@ -48,6 +50,7 @@ public class EnemyController : MonoBehaviour
 
     private float health = 0;
     private float currentSpeed = 0;
+    private bool isDead = false;
 
     private Vector2 movementDir = Vector2.zero;
     private List<Collider2D> directionPoints = new();
@@ -57,13 +60,13 @@ public class EnemyController : MonoBehaviour
 
     #region Set Up
 
-    public void SetUpEnemy(EnemyManager manager, ProjectileManager projManager, List<Collider2D> dirPoints, int group, Transform targetTr)
+    public void SetUpEnemy(EnemyManager manager, ProjectileManager projManager, List<Collider2D> dirPoints, int group, Transform targetTr, EnemyType enemyColor)
     {
         enemyManager = manager;
         health = maxHealth;
         poolGroup = group;
         currentSpeed = maxSpeed;
-
+        enemyType = enemyColor;
         SetUpDirectionPoints(dirPoints);
         weaponController.SetUpWeapon(this, projManager, targetTr);
         sprite.color = enemyManager.GetEnemyColor(enemyType);
@@ -113,6 +116,11 @@ public class EnemyController : MonoBehaviour
         return enemyType;
     }
 
+    public ProjectileType GetProjectileType()
+    {
+        return projectileThisShoots;
+    }
+
     public void ChangeMovementDirection()
     {
         currentDirIndex++;
@@ -147,6 +155,7 @@ public class EnemyController : MonoBehaviour
 
     IEnumerator EnemyDeath(float seconds)
     {
+        isDead = true;
         // Trigger Die Animation here
         yield return new WaitForSeconds(seconds);
 
@@ -157,6 +166,7 @@ public class EnemyController : MonoBehaviour
     {
         currentSpeed = maxSpeed;
         gameObject.SetActive(true);
+        isDead = false;
         health = maxHealth;
         transform.position = position;
         ChangeMovementDirection();
@@ -168,5 +178,10 @@ public class EnemyController : MonoBehaviour
             return;
 
         enemyManager.ResetEnemy(this);
+    }
+
+    public bool IsDead()
+    {
+        return isDead;
     }
 }

@@ -32,7 +32,7 @@ public class EnemyWeaponController : MonoBehaviour
 
     private void Update()
     {
-        if (!isShooting || !targetTr)
+        if (!isShooting || !targetTr || enemyController.IsDead())
             return;
 
         currentFireTime += Time.deltaTime;
@@ -55,10 +55,10 @@ public class EnemyWeaponController : MonoBehaviour
 
     private void Shoot(Vector2 dir)
     {
-        ProjectileController proj = projectileManager.GetProjectile(enemyController.GetEnemyType());
+        ProjectileController proj = projectileManager.GetProjectile(enemyController.GetProjectileType());
         if (!proj)
             return;
 
-        proj.ShootProjectile(transform.position, dir);
+        proj.ShootProjectile(transform.position, dir,enemyController.GetEnemyType());
     }
 }

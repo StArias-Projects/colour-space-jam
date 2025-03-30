@@ -120,8 +120,10 @@ public class GameManager : MonoBehaviour
 
     public void TryAgain()
     {
+
         InitStats();
         gamePlayManager.ResetGame(gameStats);
+        Scene scene = SceneManager.GetActiveScene(); SceneManager.LoadScene(scene.name);
     }
 
     public void ChangeScene(int sceneIndex)

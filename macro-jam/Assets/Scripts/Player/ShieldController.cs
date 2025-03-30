@@ -23,9 +23,14 @@ public class ShieldController : MonoBehaviour
 
     public void SetUp(PlayerManager player) 
     {
-        _player = player;    
+        _player = player;
+        
     }
 
+    private void Start()
+    {
+        SetHighlightedShield();
+    }
     private void Update()
     {
         if (!_player || _player.GetGameState() != GameState.Playing)
@@ -76,12 +81,12 @@ public class ShieldController : MonoBehaviour
             _timesShieldsRotated -= 1;
             if (_timesShieldsRotated < 0)
             {
-                _timesShieldsRotated = 3;
+                _timesShieldsRotated = 1;
             }
         }
         
-        _timesShieldsRotated %= 4;
-        _rotateTween = clickRotator.DOLocalRotate(_timesShieldsRotated * new Vector3(0, 0, 90), secondsToRotateShieldsOnClick);
+        _timesShieldsRotated %= 2;
+        _rotateTween = clickRotator.DOLocalRotate(_timesShieldsRotated * new Vector3(0, 0, 180), secondsToRotateShieldsOnClick);
         SetHighlightedShield();
     }
 
@@ -92,15 +97,14 @@ public class ShieldController : MonoBehaviour
         {
             if (i == highlighted_index)
             {
-                shields[i].transform.DOScale(Vector3.one, secondsToRotateShieldsOnClick);
-                shields[i].transform.DOLocalMove(shields[i].startingLocalPosition * 1.5f, secondsToRotateShieldsOnClick);
+                shields[i].ToggleAsMainShield(true, secondsToRotateShieldsOnClick);
             }
             else
             {
-                shields[i].transform.DOScale(Vector3.one * .5f, secondsToRotateShieldsOnClick);
-                shields[i].transform.DOLocalMove(shields[i].startingLocalPosition, secondsToRotateShieldsOnClick);
+                shields[i].ToggleAsMainShield(false, secondsToRotateShieldsOnClick);
             }
         }
 
     }
 }
+

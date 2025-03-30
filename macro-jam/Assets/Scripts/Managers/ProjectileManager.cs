@@ -2,13 +2,21 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
+
+
+public enum ProjectileType
+{
+    Small,
+}
+
+
 [Serializable]
 public class ProjectileAttributes
 {
     public ProjectileController projectilePrefab;
     public int maxSizePool;
     public Transform projectilePool;
-    public EnemyType enemyType;
+    public ProjectileType projectileType;
 
     [HideInInspector]
     public List<ProjectileController> inactiveProjectiles = new();
@@ -19,7 +27,7 @@ public class ProjectileManager : MonoBehaviour
     [SerializeField]
     private List<ProjectileAttributes> projectileList;
 
-    private Dictionary<EnemyType, ProjectileAttributes> projectileDict = new();
+    private Dictionary<ProjectileType, ProjectileAttributes> projectileDict = new();
     private EnemyManager enemyManager;
 
     public static event Action OnGameOver;
@@ -29,11 +37,11 @@ public class ProjectileManager : MonoBehaviour
     public void SetUp(EnemyManager enemyManagerRef)
     {
         enemyManager = enemyManagerRef;
-        projectileDict = new Dictionary<EnemyType, ProjectileAttributes>();
+        projectileDict = new Dictionary<ProjectileType, ProjectileAttributes>();
 
         foreach (var projectile in projectileList)
         {
-            projectileDict[projectile.enemyType] = projectile;
+            projectileDict[projectile.projectileType] = projectile;
         }
 
         GenerateProjectiles();
@@ -41,25 +49,25 @@ public class ProjectileManager : MonoBehaviour
 
     public void GenerateProjectiles()
     {
-        foreach (KeyValuePair<EnemyType, ProjectileAttributes> projectileElement in projectileDict)
+        foreach (KeyValuePair<ProjectileType, ProjectileAttributes> projectileElement in projectileDict)
         {
-            EnemyType enemyType = projectileElement.Key;
+            ProjectileType projectileType = projectileElement.Key;
             ProjectileAttributes projectileAttr = projectileElement.Value;
             for (int i = 0; i < projectileAttr.maxSizePool; i++)
             {
                 ProjectileController projectile = Instantiate(projectileAttr.projectilePrefab, projectileAttr.projectilePool.position, Quaternion.identity, projectileAttr.projectilePool);
                 projectile.gameObject.SetActive(false);
                 projectileAttr.inactiveProjectiles.Add(projectile);
-                projectile.SetUp(this, enemyType, enemyManager);
+                projectile.SetUp(this, enemyManager);
             }
         }
     }
 
     #endregion
 
-    public ProjectileController GetProjectile(EnemyType enemyType)
+    public ProjectileController GetProjectile(ProjectileType projectileType)
     {
-        if (!projectileDict.TryGetValue(enemyType, out ProjectileAttributes projectileAttr)
+        if (!projectileDict.TryGetValue(projectileType, out ProjectileAttributes projectileAttr)
             || projectileAttr.inactiveProjectiles.Count == 0)
             return null;
 
@@ -69,9 +77,9 @@ public class ProjectileManager : MonoBehaviour
         return proj;
     }
 
-    public void ResetProjectile(ProjectileController projectile, EnemyType enemyType)
+    public void ResetProjectile(ProjectileController projectile, ProjectileType projectileType)
     {
-        if (!projectileDict.TryGetValue(enemyType, out ProjectileAttributes projectileAttr))
+        if (!projectileDict.TryGetValue(projectileType, out ProjectileAttributes projectileAttr))
             return;
 
         projectileAttr.inactiveProjectiles.Add(projectile);

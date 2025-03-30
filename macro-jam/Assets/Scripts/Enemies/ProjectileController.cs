@@ -22,10 +22,17 @@ public class ProjectileController : MonoBehaviour
     [SerializeField]
     private float attackPower;
 
+    [SerializeField]
+    private ProjectileType projectileType;
+
     private float currentLifeTime = 0;
     private ProjectileManager projectileManager;
+    private EnemyManager enemyManager;
     private Vector2 projDir;
+
+
     public EnemyType EnemyType { get; private set; }
+    
     private bool isBounced = false;
 
     public static event Action<float> OnPlayerHit;
@@ -33,11 +40,10 @@ public class ProjectileController : MonoBehaviour
     public static event Action<EnemyType> OnEnemyKilled;
     public static event Action OnProjectileReflected;
 
-    public void SetUp(ProjectileManager manager, EnemyType type, EnemyManager enemyManager)
-    {
-        EnemyType = type;
+    public void SetUp(ProjectileManager manager, EnemyManager enemyManagerRef)
+    {    
+        enemyManager = enemyManagerRef;
         projectileManager = manager;
-        sprite.color = enemyManager.GetEnemyColor(type);
     }
 
     public void OnReset()
@@ -76,7 +82,7 @@ public class ProjectileController : MonoBehaviour
 
         currentLifeTime += Time.deltaTime;
         if (currentLifeTime >= maxLifeTime)
-            projectileManager.ResetProjectile(this, EnemyType);
+            projectileManager.ResetProjectile(this, projectileType);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -102,13 +108,13 @@ public class ProjectileController : MonoBehaviour
                 EnemyType enemyType = enemy.GetEnemyType();
                 OnEnemyKilled?.Invoke(enemyType);
             }
-            projectileManager.ResetProjectile(this, EnemyType);
+            projectileManager.ResetProjectile(this, projectileType);
         }
         else if (!isBounced && collision.transform.parent && collision.transform.parent.TryGetComponent(out PlayerManager player))
         {
             OnBulletDetonated?.Invoke(this);
             OnPlayerHit?.Invoke(attackPower);
-            projectileManager.ResetProjectile(this, EnemyType);
+            projectileManager.ResetProjectile(this, projectileType);
         }
     }
 
@@ -118,11 +124,14 @@ public class ProjectileController : MonoBehaviour
         sprite.color = Color.white;
     }
 
-    public void ShootProjectile(Vector2 pos, Vector2 dir)
+    public void ShootProjectile(Vector2 pos, Vector2 dir, EnemyType type)
     {
         transform.position = pos;
         gameObject.SetActive(true);
         projDir = dir;
+
+        EnemyType = type;
+        sprite.color = enemyManager.GetEnemyColor(type);
     }
 
     private void OnGameOver()
@@ -130,6 +139,6 @@ public class ProjectileController : MonoBehaviour
         if (!projectileManager)
             return;
 
-        projectileManager.ResetProjectile(this, EnemyType);
+        projectileManager.ResetProjectile(this, projectileType);
     }
 }

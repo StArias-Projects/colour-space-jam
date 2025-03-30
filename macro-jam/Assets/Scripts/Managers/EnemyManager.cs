@@ -5,12 +5,10 @@ using UnityEngine;
 [Serializable]
 public enum EnemyType 
 {
+    None,
     Blue,
     Red,
-    Green,
-    Orange,
-
-    None
+   
 }
 
 public class EnemyManager : MonoBehaviour
@@ -57,14 +55,14 @@ public class EnemyManager : MonoBehaviour
     private Transform targetTr;
     private float currentTime = 0;
 
+
+    [SerializeField]
+    private Color enemyWhiteColor;
     [SerializeField]
     private Color enemyBlueColor;
     [SerializeField]
     private Color enemyRedColor;
-    [SerializeField]
-    private Color enemyGreenColor;
-    [SerializeField]
-    private Color enemyOrangeColor;
+    
 
     public static event Action OnGameOver;
 
@@ -91,7 +89,11 @@ public class EnemyManager : MonoBehaviour
                 EnemyController enemy = Instantiate(pool.enemyController, enemyContainer.position, Quaternion.identity, enemyContainer);
                 enemy.gameObject.SetActive(false);
                 pool.inactiveEnemies.Add(enemy);
-                enemy.SetUpEnemy(this, projectileManager, directionPoints, poolGroup, targetTr);
+
+                int numberOfValuesInEnum = Enum.GetNames(typeof(EnemyType)).Length;
+                EnemyType colorOfEnemy = (EnemyType)UnityEngine.Random.Range(1, numberOfValuesInEnum);
+
+                enemy.SetUpEnemy(this, projectileManager, directionPoints, poolGroup, targetTr, colorOfEnemy);
             }
 
             poolGroup++;
@@ -157,10 +159,8 @@ public class EnemyManager : MonoBehaviour
                 return enemyBlueColor;
             case EnemyType.Red:
                 return enemyRedColor;
-            case EnemyType.Green:
-                return enemyGreenColor;
-            case EnemyType.Orange:
-                return enemyOrangeColor;
+            case EnemyType.None:
+                return enemyWhiteColor;
             default:
                 break;
         }
