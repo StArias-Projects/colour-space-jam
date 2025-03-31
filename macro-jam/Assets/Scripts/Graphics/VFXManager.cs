@@ -9,10 +9,10 @@ public class VFXManager : MonoBehaviour
 
 
     [SerializeField]
-    private VisualEffect impactVFXPrefab;
+    private ParticleSystem impactVFXPrefab;
 
     [SerializeField]
-    private VisualEffect firingVFXPrefab;
+    private ParticleSystem firingVFXPrefab;
 
     public void SetUp(GamePlayManager gpManager, EnemyManager enemyManagerRef)
     {
@@ -36,19 +36,24 @@ public class VFXManager : MonoBehaviour
 
     public void PlayFiringVFX(Vector3 positionToSpawnAt, Quaternion rot, EnemyType enemyType)
     {
-        VisualEffect spawnedVisualEffect = Instantiate(firingVFXPrefab, positionToSpawnAt, rot,transform);
-        spawnedVisualEffect.SetVector4("Color", enemyManager.GetEnemyColor(enemyType));
+        ParticleSystem spawnedVisualEffect = Instantiate(firingVFXPrefab, positionToSpawnAt, rot,transform);
+        var main = spawnedVisualEffect.main;
+        main.startColor = enemyManager.GetEnemyColor(enemyType);
         //might be worth pooling this at some point
+        spawnedVisualEffect.Play();
         Destroy(spawnedVisualEffect, 5.0f);
+        print("spawning");
 
     }
 
     public void PlayImpactVFX(Vector3 positionToSpawnAt, Color color)
     {
-        VisualEffect spawnedVisualEffect = Instantiate(impactVFXPrefab, transform);
+        ParticleSystem spawnedVisualEffect = Instantiate(impactVFXPrefab, transform);
         spawnedVisualEffect.transform.position = positionToSpawnAt;
-        spawnedVisualEffect.SetVector4("ImpactColor", color);
+        var main = spawnedVisualEffect.main;
+        main.startColor = color;
         //might be worth pooling this at some point
+        spawnedVisualEffect.Play();
         Destroy(spawnedVisualEffect, 5.0f);
 
     }
