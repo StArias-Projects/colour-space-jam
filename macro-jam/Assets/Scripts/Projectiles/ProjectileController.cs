@@ -43,6 +43,8 @@ public class ProjectileController : MonoBehaviour
 
     public void OnReset()
     {
+        currentLifeTime = 0;
+        velocityBeforPaused = Vector2.zero;
         isBounced = false;
     }
 
