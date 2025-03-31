@@ -17,14 +17,18 @@ public class PlayerManager : MonoBehaviour
     [SerializeField]
     private PlayerSFXController playerSFXController;
 
+    [SerializeField]
+    [Range(0, 1)]
+    private float heartBeatHealthThreshHold;
+
     private float health = 0;
     private GamePlayManager gamePlayManager;
     private bool isDeathFinished = false;
     private Vector3 initialPos;
     private Quaternion initialRotation;
     private Vector3 initialScale;
-    public static event Action<float> OnPlayerTakeDamage;
-    public static event Action<float> OnPlayerHealed;
+    public static event Action<float, bool> OnPlayerTakeDamage;
+    public static event Action<float, bool> OnPlayerHealed;
     public void SetUp(GamePlayManager gpManager)
     {
         health = maxHealth;
@@ -84,9 +88,13 @@ public class PlayerManager : MonoBehaviour
     public void ReceiveDamage(float damage)
     {
         health -= damage;
+        bool isLowHealth = health <= health * heartBeatHealthThreshHold;
+        if (isLowHealth)
+            playerSFXController.PlayHeartBeat();
+
         if (damage > 0)
         {
-            OnPlayerTakeDamage?.Invoke(damage);
+            OnPlayerTakeDamage?.Invoke(damage, isLowHealth);
         }
 
         if (health <= 0)
@@ -100,15 +108,19 @@ public class PlayerManager : MonoBehaviour
     {
         health += amount;
         health = Mathf.Min(health, maxHealth);
+        bool isNotLowHealth = health > health * heartBeatHealthThreshHold;
+        if (isNotLowHealth)
+            playerSFXController.StopHeartBeat();
 
-        if(amount > 0)
+        if (amount > 0)
         {
-            OnPlayerHealed?.Invoke(amount);
+            OnPlayerHealed?.Invoke(amount, isNotLowHealth);
         }
     }
 
     public void StartDeathAnimation()
     {
+        playerSFXController.StopHeartBeat();
         playerSFXController.PlayPlayerDeathSFX();
         transform.DOScale(Vector3.zero, 1f).OnComplete(FinishDeathAnimation);
     }

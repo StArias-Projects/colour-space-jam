@@ -253,7 +253,7 @@ MonoBehaviour:
   sfxController: {fileID: 7713446011929685102}
   rigidBody: {fileID: 5715583339131039679}
   maxLifeTime: 0.3
-  attackPower: 1
+  attackPower: 2
   projectileType: 1
   lineRenderer: {fileID: 5718006639961653200}
   distance: 100
@@ -303,4 +303,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   shotEmitter: {fileID: 5602464920906735421}
-  bulletDestroyed: {fileID: 0}
+  projectileDestroyed: {fileID: 0}

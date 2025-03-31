@@ -100,7 +100,7 @@ public class CameraController : MonoBehaviour
     }
 
 
-    void OnPlayerTakeDamage(float amount)
+    void OnPlayerTakeDamage(float amount, bool isLowHealth)
     {
         StartCoroutine(ShakeCamera(amount / 5f));
     }
