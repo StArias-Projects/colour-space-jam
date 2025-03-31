@@ -14,7 +14,7 @@ public class ProjectileController : MonoBehaviour
     protected float attackPower;
 
     [SerializeField]
-    protected ProjectileType projectileType;
+    public ProjectileType projectileType;
 
     private float currentLifeTime = 0;
     private Vector2 velocityBeforPaused = Vector2.zero;

@@ -26,7 +26,7 @@ public class GamePlayManager : MonoBehaviour
     private HUDManager hudManager;
 
     [SerializeField]
-    private ProjectileManager projectileManager;
+    public ProjectileManager projectileManager;
 
     [SerializeField]
     private CameraController cameraController;

@@ -4,8 +4,7 @@ using TMPro;
 
 public class Pickup : MonoBehaviour
 {
-    [SerializeField]
-    float healthGranted = 3;
+    
 
     [SerializeField]
     SpriteRenderer sprite;
@@ -14,28 +13,26 @@ public class Pickup : MonoBehaviour
     SpriteRenderer spriteShadow;
 
     [SerializeField]
-    TextMeshPro tutorial;
-
-    [SerializeField]
     float lifespan = 10;
 
-    static bool hasPlayerPickedThisUpYet = false;
+    
     Rigidbody2D body;
+    protected ProjectileManager projectileManager;
+    protected bool triggered = false;
 
-    bool triggered = false;
+    Tween fadeInTween;
 
-    private void Start()
+    public void SetUp(ProjectileManager projManagerRef)
+    {
+        projectileManager = projManagerRef;
+    }
+
+
+    protected virtual void Start()
     {
         body = GetComponent<Rigidbody2D>();
-        sprite.DOFade(0, 0).OnComplete(()=> sprite.DOFade(1, 3f));
-        if (!hasPlayerPickedThisUpYet)
-        {
-            tutorial.DOFade(1, 3);
-        }
-        else
-        {
-            Destroy(tutorial);
-        }
+        fadeInTween = sprite.DOFade(0, 0).OnComplete(()=> sprite.DOFade(1, 1f));
+        
         Invoke("OnLifespanOver", lifespan);
     }
 
@@ -52,28 +49,28 @@ public class Pickup : MonoBehaviour
         
     }
 
+    protected virtual void Trigger(PlayerManager player)
+    {
+        triggered = true;
+        body.simulated = false;
+
+        fadeInTween.Kill();
+        sprite.transform.DOScale(1, .15f);
+        sprite.DOFade(0, .15f);
+        spriteShadow.DOFade(0, .1f);
+        Destroy(gameObject, 1);
+    }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (triggered) return;
 
         if (collision.TryGetComponent(out PlayerManager player))
-        {
-            triggered = true;
-            player.GainHealth(healthGranted);
-            body.simulated = false;
-
-            sprite.transform.DOScale(1, .15f);
-            sprite.DOFade(0, .15f);
-            spriteShadow.DOFade(0, .1f);
-            Destroy(gameObject,1);
-            hasPlayerPickedThisUpYet = true;
-            if (tutorial)
-            {
-                tutorial.DOFade(0, .15f);
-            }
+        { 
+            Trigger(player);
         }
     }
+
 
     void OnLifespanOver()
     {

@@ -19,6 +19,7 @@ public class PickupSpawner : MonoBehaviour
     [SerializeField]
     List<Transform> possibleSpawnPoints;
 
+    [SerializeField] ProjectileManager projectileManager;
 
     private void Start()
     {
@@ -33,6 +34,7 @@ public class PickupSpawner : MonoBehaviour
         {
             yield return new WaitForSeconds(Random.Range(secondsPerSpawnMin, secondsPerSpawnMax));
             Pickup spawnedPickup = Instantiate(pickupPrefabs[Random.Range(0, pickupPrefabs.Count)], transform);
+            spawnedPickup.SetUp(projectileManager);
             spawnedPickup.transform.position = possibleSpawnPoints[Random.Range(0, possibleSpawnPoints.Count)].position;
         }
 

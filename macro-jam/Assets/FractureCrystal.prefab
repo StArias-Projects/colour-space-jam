@@ -10,10 +10,10 @@ GameObject:
   m_Component:
   - component: {fileID: 5164453765781335690}
   - component: {fileID: 2262282900851614807}
-  - component: {fileID: 2595387605784814465}
   - component: {fileID: 9214553543598733783}
+  - component: {fileID: 6857323330885655966}
   m_Layer: 0
-  m_Name: FractureCrystalPickup
+  m_Name: FractureCrystal
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -71,24 +71,7 @@ CircleCollider2D:
   m_CompositeOperation: 0
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
-  m_Radius: 0.32
---- !u!114 &2595387605784814465
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 398160394395779315}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aeb559699045d844aa0a8d541727453e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  healthGranted: 2
-  sprite: {fileID: 4722287657112822754}
-  spriteShadow: {fileID: 766165287592015312}
-  tutorial: {fileID: 8061365478368455475}
-  lifespan: 10
+  m_Radius: 0.51994985
 --- !u!50 &9214553543598733783
 Rigidbody2D:
   serializedVersion: 5
@@ -116,6 +99,22 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
+--- !u!114 &6857323330885655966
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 398160394395779315}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 11593b7af12c3234fbe6a32fa119681b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sprite: {fileID: 4722287657112822754}
+  spriteShadow: {fileID: 766165287592015312}
+  lifespan: 10
+  numberOfFractures: 8
 --- !u!1 &4632618672553574342
 GameObject:
   m_ObjectHideFlags: 0
@@ -194,7 +193,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 9d159ce424a0bba479de0d5df39b21a9, type: 3}
-  m_Color: {r: 0.2216981, g: 1, b: 0.3787866, a: 1}
+  m_Color: {r: 0.8383936, g: 0.2235294, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0

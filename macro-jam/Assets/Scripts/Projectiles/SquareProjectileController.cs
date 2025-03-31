@@ -44,7 +44,7 @@ public class SquareProjectileController : ProjectileController
 
             vfxManager.PlayFiringVFX(transform.position, Quaternion.Euler(0, 0, angle), EnemyColor);
         }
-        else if (isBounced && collision.TryGetComponent(out EnemyController enemy))
+        else if (EnemyColor == EnemyType.None && collision.TryGetComponent(out EnemyController enemy))
         {
             TriggerOnBulletDetonated(transform.position);
 
@@ -56,12 +56,16 @@ public class SquareProjectileController : ProjectileController
 
             projectileManager.ResetProjectile(this, projectileType);
         }
-        else if (!isBounced && collision.TryGetComponent(out PlayerManager player))
+        else if (!isBounced && collision.TryGetComponent(out PlayerManager player) && EnemyColor != EnemyType.None)
         {
             TriggerOnBulletDetonated(transform.position);
             TriggerOnPlayerHit(attackPower);
             projectileManager.ResetProjectile(this, projectileType);
             player.ReceiveDamage(attackPower);
+        }
+        else if (collision.TryGetComponent(out FractureCrystal crystal) && EnemyColor == EnemyType.None)
+        {
+            crystal.OnHit(false);
         }
     }
 
