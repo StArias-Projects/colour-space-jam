@@ -60,7 +60,9 @@ public class GamePlayManager : MonoBehaviour
 
     #region Private Variables
 
-    public float currentSpeed = 0;
+    private float currentSpeed = 0;
+    public float CurrentSpeed { get { return currentGameTime; } }
+
     private float elapsedTime = 0f;
     private float currentGameTime = 0;
     private GameState gameState = GameState.Opening;

@@ -109,7 +109,7 @@ public class EnemyManager : MonoBehaviour
             return;
 
         currentTime += Time.deltaTime;
-        float generationInterval = 1f / generationRate / gamePlayManager.currentSpeed;
+        float generationInterval = 1f / generationRate / gamePlayManager.CurrentSpeed;
 
         if (currentTime >= generationInterval)
         {
@@ -121,7 +121,7 @@ public class EnemyManager : MonoBehaviour
     private void SpawnEnemy()
     {
         //just a quick way of not making big enemies spawn too early
-        int rndEnemy = UnityEngine.Random.Range(0, Mathf.Min(enemyPoolList.Count, (int)gamePlayManager.currentSpeed));
+        int rndEnemy = UnityEngine.Random.Range(0, Mathf.Min(enemyPoolList.Count, (int)gamePlayManager.CurrentSpeed));
         int rndSpawnPoint = UnityEngine.Random.Range(0, spawnPoints.Count);
 
         if (enemyPoolList.Count == 0
