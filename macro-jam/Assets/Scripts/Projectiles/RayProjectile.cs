@@ -71,7 +71,7 @@ public class RayProjectile : ProjectileController
             if (newrayCastHit && newrayCastHit.collider.TryGetComponent(out PlayerManager player))
             {
                 lineRenderer.SetPosition(1, player.transform.position);
-                player.ReceiveDamage(attackPower);
+                TriggerOnPlayerHit(attackPower);
                 TriggerOnBulletDetonated(raycastHit.point);
             }
         }

@@ -71,7 +71,6 @@ public class SquareProjectileController : ProjectileController
             TriggerOnBulletDetonated(transform.position);
             TriggerOnPlayerHit(attackPower);
             projectileManager.ResetProjectile(this, projectileType);
-            player.ReceiveDamage(attackPower);
         }
         else if (isBounced && collision.TryGetComponent(out FractureCrystal crystal))
         {

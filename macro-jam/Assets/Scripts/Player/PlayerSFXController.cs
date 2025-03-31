@@ -1,3 +1,4 @@
+using FMOD.Studio;
 using FMODUnity;
 using System.Collections.Generic;
 using UnityEngine;
@@ -16,8 +17,10 @@ public class PlayerSFXController : MonoBehaviour
     private StudioEventEmitter wallBounceSFX; 
     [SerializeField]
     private StudioEventEmitter spawnPlayerSFX;
+    [SerializeField]
+    private StudioEventEmitter heartBeatSFX;
 
-
+    private bool isHeartBeatPlaying = false;
     private Coroutine movementFadeIn;
     private Coroutine movementFadeOut;
 
@@ -77,5 +80,23 @@ public class PlayerSFXController : MonoBehaviour
     public void PlaySpawnPlayer() 
     {
         spawnPlayerSFX.Play();
+    }
+
+    public void PlayHeartBeat() 
+    {
+        if (isHeartBeatPlaying)
+            return;
+
+        isHeartBeatPlaying = true;
+        heartBeatSFX.Play();
+    }
+
+    public void StopHeartBeat() 
+    {
+        if (!isHeartBeatPlaying)
+            return;
+
+        isHeartBeatPlaying = false;
+        heartBeatSFX.Stop();
     }
 }

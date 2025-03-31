@@ -1,3 +1,4 @@
+using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -13,9 +14,25 @@ public class HUDManager : MonoBehaviour
     [SerializeField]
     private TextMeshProUGUI timeText;
 
+    [Header("Health Pulse Effect")]
+    [SerializeField]
+    private Image healthPulseImage;
+
+    [SerializeField]
+    private float minAlpha;
+
+    [SerializeField]
+    private float maxAlpha;
+
+    [SerializeField]
+    private float alphaSpeed;
+
+    private Color originalHealthPulseColor;
+
     private GamePlayManager gamePlayManager;
 
     private float time = 0;
+    private bool isLowHealth = false;
 
     public void SetUp(GamePlayManager gpManager, float playerMaxHP)
     {
@@ -26,6 +43,8 @@ public class HUDManager : MonoBehaviour
 
         time = 0;
         timeText.text = $"{time.ToString("F0")}";
+
+        originalHealthPulseColor = healthPulseImage.color;
     }
 
     private void OnEnable()
@@ -34,7 +53,6 @@ public class HUDManager : MonoBehaviour
         PlayerManager.OnPlayerHealed += GainHealth;
         GamePlayManager.OnGamePaused += OnGamePaused;
         GamePlayManager.OnGameContinued += OnGameContinued;
-
     }
 
     private void OnDisable()
@@ -45,18 +63,42 @@ public class HUDManager : MonoBehaviour
         GamePlayManager.OnGameContinued -= OnGameContinued;
     }
 
-    public void ReduceHealth(float damage)
+    private IEnumerator LowHealthEffect()
+    {
+        while (isLowHealth) // Runs continuously until stopped
+        {
+            float alpha = Mathf.Lerp(minAlpha, maxAlpha, Mathf.PingPong(Time.time * alphaSpeed, 1));
+            Color color = healthPulseImage.color;
+            color.a = alpha;
+
+            healthPulseImage.color = color;
+            yield return null; // Waits until next frame
+        }
+
+        healthPulseImage.color = originalHealthPulseColor;
+    }
+
+    public void ReduceHealth(float damage, bool enablePulsHealthVFX)
     {
         healthBar.value -= damage;
         if (healthBar.value < 0)
             healthBar.value = 0;
+
+        if (!isLowHealth && enablePulsHealthVFX) 
+        {
+            isLowHealth = true;
+            StartCoroutine(LowHealthEffect());
+        }
     }
 
-    public void GainHealth(float amount)
+    public void GainHealth(float amount, bool disablePulseHealthVFX)
     {
         healthBar.value += amount;
         if (healthBar.value > healthBar.maxValue)
             healthBar.value = healthBar.maxValue;
+
+        if (isLowHealth && disablePulseHealthVFX)
+            isLowHealth = false;
     }
 
     public void UpdateTime(float newTime)
@@ -70,6 +112,8 @@ public class HUDManager : MonoBehaviour
         healthBar.value = health;
         time = 0;
         timeText.text = $"{time.ToString("F0")}";
+        isLowHealth = false;
+        healthPulseImage.color = originalHealthPulseColor;
     }
 
     private void OnGamePaused() 
