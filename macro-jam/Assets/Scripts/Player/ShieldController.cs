@@ -30,7 +30,7 @@ public class ShieldController : MonoBehaviour
         _player = player;
         playerSFXController = controller;
         int i = 0;
-        foreach (var shield in shields) 
+        foreach (var shield in shields)
         {
             shield.SetUp(playerSFXController, i);
             originalPos.Add(shield.transform.position);
@@ -50,6 +50,7 @@ public class ShieldController : MonoBehaviour
 
         RotateShields();
     }
+
     void RotateShields()
     {
         if (!_player)
@@ -119,9 +120,9 @@ public class ShieldController : MonoBehaviour
         }
     }
 
-    public void ResetShields() 
+    public void ResetShields()
     {
-        RotateShields();
+        Rotate(true);
     }
 }
 
