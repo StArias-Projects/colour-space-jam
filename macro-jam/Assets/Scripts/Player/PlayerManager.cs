@@ -21,7 +21,7 @@ public class PlayerManager : MonoBehaviour
     private Quaternion initialRotation;
     private Vector3 initialScale;
     public static event Action<float> OnPlayerTakeDamage;
-
+    public static event Action<float> OnPlayerHealed;
     public void SetUp(GamePlayManager gpManager)
     {
         health = maxHealth;
@@ -90,6 +90,18 @@ public class PlayerManager : MonoBehaviour
             StartCoroutine(gamePlayManager.GameOver());
         }
     }
+
+    public void GainHealth(float amount)
+    {
+        health += amount;
+        health = Mathf.Min(health, maxHealth);
+
+        if(amount > 0)
+        {
+            OnPlayerHealed?.Invoke(amount);
+        }
+    }
+
 
     public void StartDeathAnimation()
     {

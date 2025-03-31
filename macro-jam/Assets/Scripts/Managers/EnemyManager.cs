@@ -69,9 +69,6 @@ public class EnemyManager : MonoBehaviour
         targetTr = target;
 
         GenerateEnemies();
-        
-        //just for fast testing
-        SpawnEnemy();
     }
 
     public void GenerateEnemies()
@@ -112,7 +109,7 @@ public class EnemyManager : MonoBehaviour
             return;
 
         currentTime += Time.deltaTime;
-        float generationInterval = 1f / generationRate;
+        float generationInterval = 1f / generationRate / gamePlayManager.currentSpeed;
 
         if (currentTime >= generationInterval)
         {
@@ -123,7 +120,8 @@ public class EnemyManager : MonoBehaviour
 
     private void SpawnEnemy()
     {
-        int rndEnemy = UnityEngine.Random.Range(0, enemyPoolList.Count);
+        //just a quick way of not making big enemies spawn too early
+        int rndEnemy = UnityEngine.Random.Range(0, Mathf.Min(enemyPoolList.Count, (int)gamePlayManager.currentSpeed));
         int rndSpawnPoint = UnityEngine.Random.Range(0, spawnPoints.Count);
 
         if (enemyPoolList.Count == 0

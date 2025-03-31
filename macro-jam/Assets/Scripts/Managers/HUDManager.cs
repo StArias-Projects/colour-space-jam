@@ -31,13 +31,16 @@ public class HUDManager : MonoBehaviour
     private void OnEnable()
     {
         PlayerManager.OnPlayerTakeDamage += ReduceHealth;
+        PlayerManager.OnPlayerHealed += GainHealth;
         GamePlayManager.OnGamePaused += OnGamePaused;
         GamePlayManager.OnGameContinued += OnGameContinued;
+
     }
 
     private void OnDisable()
     {
         PlayerManager.OnPlayerTakeDamage -= ReduceHealth;
+        PlayerManager.OnPlayerHealed -= GainHealth;
         GamePlayManager.OnGamePaused -= OnGamePaused;
         GamePlayManager.OnGameContinued -= OnGameContinued;
     }
@@ -47,6 +50,13 @@ public class HUDManager : MonoBehaviour
         healthBar.value -= damage;
         if (healthBar.value < 0)
             healthBar.value = 0;
+    }
+
+    public void GainHealth(float amount)
+    {
+        healthBar.value += amount;
+        if (healthBar.value > healthBar.maxValue)
+            healthBar.value = healthBar.maxValue;
     }
 
     public void UpdateTime(float newTime)

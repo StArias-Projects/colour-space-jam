@@ -60,7 +60,7 @@ public class GamePlayManager : MonoBehaviour
 
     #region Private Variables
 
-    private float currentSpeed = 0;
+    public float currentSpeed = 0;
     private float elapsedTime = 0f;
     private float currentGameTime = 0;
     private GameState gameState = GameState.Opening;
@@ -157,6 +157,7 @@ public class GamePlayManager : MonoBehaviour
         gameOverMusicEmitter.Stop();
 
         gameManager.ReturnToMainMenu();
+        Time.timeScale = 1;
     }
 
     public void PauseGame()
@@ -166,7 +167,7 @@ public class GamePlayManager : MonoBehaviour
 
         gamePlayMusicEmitter.EventInstance.setPaused(true);
         pauseMusicEmitter.Play();
-
+        Time.timeScale = 0;
         OnGamePaused?.Invoke();
     }
 
@@ -177,7 +178,7 @@ public class GamePlayManager : MonoBehaviour
 
         gamePlayMusicEmitter.EventInstance.setPaused(false);
         pauseMusicEmitter.Stop();
-
+        Time.timeScale = 1;
         OnGameContinued?.Invoke();
     }
 

@@ -20,13 +20,13 @@ public class RayProjectile : ProjectileController
         base.ShootProjectile(pos, dir, type);
         var color = enemyManager.GetEnemyColor(type);
 
-        Sequence sequence = DOTween.Sequence();
-        sequence.Append(DOTween.To(() => lineRenderer.startColor, (x) => lineRenderer.startColor = x, color, .1f));
-        sequence.Append(DOTween.To(() => lineRenderer.endColor, (x) => lineRenderer.endColor = x, color, .1f));
+        Sequence sequence = DOTween.Sequence().SetUpdate(false);
+        sequence.Append(DOTween.To(() => lineRenderer.startColor, (x) => lineRenderer.startColor = x, color, .1f).SetUpdate(false));
+        sequence.Append(DOTween.To(() => lineRenderer.endColor, (x) => lineRenderer.endColor = x, color, .1f).SetUpdate(false));
         Color fadedColor = color;
         fadedColor.a = 0;
-        sequence.Append(DOTween.To(() => lineRenderer.startColor, (x) => lineRenderer.startColor = x, fadedColor, maxLifeTime / 2f));
-        sequence.Append(DOTween.To(() => lineRenderer.endColor, (x) => lineRenderer.endColor = x, fadedColor, maxLifeTime / 2f));
+        sequence.Append(DOTween.To(() => lineRenderer.startColor, (x) => lineRenderer.startColor = x, fadedColor, maxLifeTime / 2f).SetUpdate(false));
+        sequence.Append(DOTween.To(() => lineRenderer.endColor, (x) => lineRenderer.endColor = x, fadedColor, maxLifeTime / 2f).SetUpdate(false));
 
         lineRenderer.positionCount = 2;
         lineRenderer.SetPosition(0, pos);
