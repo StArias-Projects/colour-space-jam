@@ -22,6 +22,9 @@ public class ShieldController : MonoBehaviour
     private PlayerManager _player;
     private PlayerSFXController playerSFXController;
 
+    private List<Vector2> originalPos = new List<Vector2>();
+    private List<Quaternion> originalRotation = new List<Quaternion>();
+
     public void SetUp(PlayerManager player, PlayerSFXController controller)
     {
         _player = player;
@@ -30,6 +33,8 @@ public class ShieldController : MonoBehaviour
         foreach (var shield in shields) 
         {
             shield.SetUp(playerSFXController, i);
+            originalPos.Add(shield.transform.position);
+            originalRotation.Add(shield.transform.rotation);
         }
     }
 
@@ -45,7 +50,6 @@ public class ShieldController : MonoBehaviour
 
         RotateShields();
     }
-
     void RotateShields()
     {
         if (!_player)
@@ -112,6 +116,17 @@ public class ShieldController : MonoBehaviour
             {
                 shields[i].ToggleAsMainShield(false, secondsToRotateShieldsOnClick);
             }
+        }
+    }
+
+    public void ResetShields() 
+    {
+        int i = 0;
+        foreach (var shield in shields) 
+        {
+            shield.transform.position = originalPos[i];
+            shield.transform.rotation = originalRotation[i];
+            i++;
         }
     }
 }

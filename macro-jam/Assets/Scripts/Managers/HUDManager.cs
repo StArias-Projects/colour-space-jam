@@ -53,7 +53,6 @@ public class HUDManager : MonoBehaviour
         PlayerManager.OnPlayerHealed += GainHealth;
         GamePlayManager.OnGamePaused += OnGamePaused;
         GamePlayManager.OnGameContinued += OnGameContinued;
-
     }
 
     private void OnDisable()
@@ -113,6 +112,8 @@ public class HUDManager : MonoBehaviour
         healthBar.value = health;
         time = 0;
         timeText.text = $"{time.ToString("F0")}";
+        isLowHealth = false;
+        healthPulseImage.color = originalHealthPulseColor;
     }
 
     private void OnGamePaused() 

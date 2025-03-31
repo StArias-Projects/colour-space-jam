@@ -37,6 +37,7 @@ public class PlayerManager : MonoBehaviour
         initialScale = transform.localScale;
 
         gamePlayManager = gpManager;
+
         playerController.SetUp(this, playerSFXController);
         shieldController.SetUp(this, playerSFXController);
 
@@ -137,6 +138,7 @@ public class PlayerManager : MonoBehaviour
         health = maxHealth;
         transform.SetPositionAndRotation(initialPos, initialRotation);
         transform.localScale = initialScale;
+        shieldController.ResetShields();
     }
 
     public bool IsDeathAnimationFinished()
