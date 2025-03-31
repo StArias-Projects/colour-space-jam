@@ -102,7 +102,6 @@ public class PlayerManager : MonoBehaviour
         }
     }
 
-
     public void StartDeathAnimation()
     {
         transform.DOScale(Vector3.zero, 1f).OnComplete(FinishDeathAnimation);

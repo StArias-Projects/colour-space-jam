@@ -27,7 +27,7 @@ public class EnemyController : MonoBehaviour
 
     [SerializeField]
     [Min(0)]
-    private float maxSpeed;
+    private float maxMovementForce;
 
     [SerializeField]
     private Rigidbody2D rigidBody;
@@ -37,6 +37,9 @@ public class EnemyController : MonoBehaviour
 
     [SerializeField]
     private LayerMask shieldMask;
+    
+    [SerializeField]
+    private LayerMask boundaryMask;
 
 
     [SerializeField]
@@ -50,7 +53,7 @@ public class EnemyController : MonoBehaviour
     private int currentDirIndex = -1;
     private Transform target;
     private float health = 0;
-    private float currentSpeed = 0;
+    private float movementForce = 0;
     private bool isDead = false;
 
     private Vector2 movementDir = Vector2.zero;
@@ -67,7 +70,7 @@ public class EnemyController : MonoBehaviour
         enemyManager = manager;
         health = maxHealth;
         poolGroup = group;
-        currentSpeed = maxSpeed;
+        movementForce = maxMovementForce;
         enemyType = enemyColor;
         target = targetTr;
         SetUpDirectionPoints(dirPoints);
@@ -106,7 +109,8 @@ public class EnemyController : MonoBehaviour
 
         if (!weaponController.IsShooting)
         {
-            rigidBody.AddForce( currentSpeed * movementDir);
+            //rigidBody.linearVelocity = currentSpeed * movementDir;
+            rigidBody.AddForce(movementForce * movementDir);
             RotateTowardsTarget(1);
         }
         else
@@ -126,10 +130,10 @@ public class EnemyController : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collision)
     {
         int mask = 1 << collision.gameObject.layer;
-        if (currentDirIndex >= 0 && currentDirIndex < directionPoints.Count &&
-            (collision.gameObject == directionPoints[currentDirIndex].gameObject
-            || (mask & playerMask.value) != 0
-            || (mask & shieldMask.value) != 0))
+        bool isCorrectIndex = currentDirIndex >= 0 && currentDirIndex < directionPoints.Count;
+        bool isCorrectMask = collision.gameObject == directionPoints[currentDirIndex].gameObject || (mask & playerMask.value) != 0
+                                || (mask & shieldMask.value) != 0 || (mask & boundaryMask.value) != 0;
+        if (isCorrectIndex && isCorrectMask)
         {
             ChangeMovementDirection();
         }
@@ -144,6 +148,8 @@ public class EnemyController : MonoBehaviour
 
     public void ChangeMovementDirection()
     {
+        rigidBody.linearVelocity = Vector3.zero;
+
         currentDirIndex++;
         if (currentDirIndex >= directionPoints.Count)
             currentDirIndex = 0;
@@ -187,7 +193,7 @@ public class EnemyController : MonoBehaviour
 
     public void StartEnemy(Vector2 position)
     {
-        currentSpeed = maxSpeed;
+        movementForce = maxMovementForce;
         gameObject.SetActive(true);
         isDead = false;
         health = maxHealth;

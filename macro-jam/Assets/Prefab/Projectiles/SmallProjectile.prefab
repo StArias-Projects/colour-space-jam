@@ -264,6 +264,9 @@ MonoBehaviour:
   sprite: {fileID: 876459792840065103}
   speed: 5
   speedAfterBounced: 12
+  boundaryMask:
+    serializedVersion: 2
+    m_Bits: 1024
 --- !u!50 &5715583339131039679
 Rigidbody2D:
   serializedVersion: 5

@@ -47,11 +47,11 @@ public class GamePlayManager : MonoBehaviour
     [Header("Game Rythm Speed")]
     [SerializeField]
     [Min(0)]
-    private float minSpeed;
+    private float minGamePlaySpeed;
 
     [SerializeField]
     [Min(0)]
-    private float maxSpeed;
+    private float maxGamePlaySpeed;
 
     [SerializeField]
     private float speedIncreaseRate;
@@ -61,7 +61,7 @@ public class GamePlayManager : MonoBehaviour
     #region Private Variables
 
     private float currentSpeed = 0;
-    public float CurrentSpeed { get { return currentGameTime; } }
+    public float CurrentSpeed { get { return currentSpeed; } }
 
     private float elapsedTime = 0f;
     private float currentGameTime = 0;
@@ -93,11 +93,12 @@ public class GamePlayManager : MonoBehaviour
     {
         gameManager = GameManager.GetInstance();
         gameStats.enemiesKilled = new();
+        currentSpeed = minGamePlaySpeed;
 
         playerManager.SetUp(this);
         hudManager.SetUp(this, playerManager.GetMaxHealth());
         enemyManager.SetUp(this, projectileManager, playerManager.transform);
-        projectileManager.SetUp(enemyManager,vfxManager);
+        projectileManager.SetUp(enemyManager, vfxManager);
         cameraController.SetUp(this);
         vfxManager.SetUp(this, enemyManager);
         pauseManager.SetUp(this);
@@ -110,7 +111,7 @@ public class GamePlayManager : MonoBehaviour
     {
         gameState = GameState.Playing;
         gameManager.ChangeCursorTexture(gameState);
-        currentSpeed = minSpeed;
+        currentSpeed = minGamePlaySpeed;
 
         gamePlayMusicEmitter.Play();
         pauseMusicEmitter.Stop();
@@ -122,11 +123,11 @@ public class GamePlayManager : MonoBehaviour
         gameManager.ChangeCursorTexture(gameState);
 
         gameStats.time = (uint)currentGameTime;
-        currentSpeed = 0;
+        currentSpeed = minGamePlaySpeed;
 
         playerManager.StartDeathAnimation();
         OnGameOver?.Invoke();
-        
+
         yield return new WaitUntil(() => playerManager.IsDeathAnimationFinished());
 
         gamePlayMusicEmitter.Stop();
@@ -136,7 +137,7 @@ public class GamePlayManager : MonoBehaviour
         gameOverManager.GameOver(gameStats);
     }
 
-    public void TryAgain() 
+    public void TryAgain()
     {
         gameManager.InitStats();
         currentGameTime = 0;
@@ -152,7 +153,7 @@ public class GamePlayManager : MonoBehaviour
         hudManager.ResetHUD(playerManager.GetMaxHealth());
     }
 
-    public void ReturnToMainMenu() 
+    public void ReturnToMainMenu()
     {
         gamePlayMusicEmitter.Stop();
         pauseMusicEmitter.Stop();
@@ -173,7 +174,7 @@ public class GamePlayManager : MonoBehaviour
         OnGamePaused?.Invoke();
     }
 
-    public void ContinueGame() 
+    public void ContinueGame()
     {
         gameState = GameState.Playing;
         gameManager.ChangeCursorTexture(gameState);
@@ -195,18 +196,18 @@ public class GamePlayManager : MonoBehaviour
 
     private void IncreaseGameRythmSpeed()
     {
-        if (currentSpeed >= maxSpeed)
+        if (currentSpeed >= maxGamePlaySpeed)
             return;
 
         elapsedTime += Time.deltaTime;
 
-        float newSpeed = minSpeed + (maxSpeed - minSpeed) * (1 - Mathf.Exp(-speedIncreaseRate * elapsedTime));
+        float newSpeed = minGamePlaySpeed + (maxGamePlaySpeed - minGamePlaySpeed) * (1 - Mathf.Exp(-speedIncreaseRate * elapsedTime));
 
         if (Mathf.Approximately(newSpeed, currentSpeed))
             return;
 
         currentSpeed = newSpeed;
-        if (currentSpeed > maxSpeed) currentSpeed = maxSpeed;
+        if (currentSpeed > maxGamePlaySpeed) currentSpeed = maxGamePlaySpeed;
     }
 
     private void IncreaseTime()

@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using UnityEngine;
 using static UnityEngine.InputSystem.InputAction;
 
@@ -6,11 +7,16 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Rigidbody2D _rb;
     [SerializeField] private float _maxSpeed;
     [SerializeField] private float _movementForce;
+    [SerializeField] LayerMask boundaryLayer;
+    [SerializeField] private float bounceForce;
 
     private Vector2 _input;
     // In case we want to slow down the player, we need this
     private float currentMaxSpeed = 0;
     private PlayerManager _player;
+    private bool isBounced = false;
+    private Vector2 bounceDir = Vector2.zero;
+    private Vector2 currentVelocity;
 
     private void OnEnable()
     {
@@ -41,9 +47,17 @@ public class PlayerController : MonoBehaviour
         if (!_player || _player.GetGameState() != GameState.Playing)
             return;
 
+        if (isBounced)
+        {
+            _rb.AddForce(bounceDir * bounceForce, ForceMode2D.Impulse);
+            isBounced = false;
+            return;
+        }
+
+        currentVelocity = _rb.linearVelocity;
+
         _rb.AddForce(_input * _movementForce, ForceMode2D.Force);
 
-        Vector2 currentVelocity = _rb.linearVelocity;
         if (_rb.linearVelocityX > currentMaxSpeed)
             currentVelocity.x = currentMaxSpeed;
         if(_rb.linearVelocityY > currentMaxSpeed)
@@ -55,5 +69,17 @@ public class PlayerController : MonoBehaviour
     private void OnGamePaused() 
     {
         _rb.linearVelocity = Vector2.zero;
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        int mask = 1 << collision.gameObject.layer;
+
+        if ((mask & boundaryLayer.value) != 0)
+        {
+            Vector2 normal = collision.GetContact(0).normal;
+            bounceDir = Vector2.Reflect(currentVelocity, normal).normalized;
+            isBounced = true;
+        }
     }
 }

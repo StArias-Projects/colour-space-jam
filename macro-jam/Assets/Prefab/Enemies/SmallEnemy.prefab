@@ -140,7 +140,7 @@ MonoBehaviour:
   sprite: {fileID: 6135199985225050661}
   shadowSprite: {fileID: 6476879393246805736}
   maxHealth: 1
-  maxSpeed: 5
+  maxMovementForce: 5
   rigidBody: {fileID: 2168393888267659187}
   playerMask:
     serializedVersion: 2
@@ -148,6 +148,9 @@ MonoBehaviour:
   shieldMask:
     serializedVersion: 2
     m_Bits: 512
+  boundaryMask:
+    serializedVersion: 2
+    m_Bits: 1024
   rotateTowardsTargetSpeed: 0
 --- !u!50 &2168393888267659187
 Rigidbody2D:

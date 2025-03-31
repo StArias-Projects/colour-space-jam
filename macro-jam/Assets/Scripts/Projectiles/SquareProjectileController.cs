@@ -11,6 +11,9 @@ public class SquareProjectileController : ProjectileController
     [SerializeField]
     private float speedAfterBounced = 12;
 
+    [SerializeField]
+    private LayerMask boundaryMask;
+
     public override void ShootProjectile(Vector2 pos, Vector2 dir, EnemyType type)
     {
         base.ShootProjectile(pos, dir, type);
@@ -30,7 +33,13 @@ public class SquareProjectileController : ProjectileController
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.TryGetComponent(out Shield shieldHit) && shieldHit.color == EnemyColor)
+        int mask = 1 << collision.gameObject.layer;
+        if((mask & boundaryMask) != 0) 
+        {
+            TriggerOnBulletDetonated(transform.position);
+            projectileManager.ResetProjectile(this, projectileType);
+        }
+        else if (collision.TryGetComponent(out Shield shieldHit) && shieldHit.color == EnemyColor)
         {
             shieldHit.OnHit();
             projDir = shieldHit.transform.up;

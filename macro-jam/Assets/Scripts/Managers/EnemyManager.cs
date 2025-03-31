@@ -31,7 +31,7 @@ public class EnemyManager : MonoBehaviour
 
     [SerializeField]
     [Tooltip("Enemies per second")]
-    private float generationRate;
+    private float initialSpawningRate;
 
     [SerializeField]
     private Transform enemyContainer;
@@ -51,6 +51,7 @@ public class EnemyManager : MonoBehaviour
     private ProjectileManager projectileManager;
     private Transform targetTr;
     private float currentTime = 0;
+    private bool isFirstEnemy = true;
 
     [SerializeField]
     private Color enemyWhiteColor;
@@ -108,8 +109,18 @@ public class EnemyManager : MonoBehaviour
         if (!gamePlayManager || gamePlayManager.GetGameState() != GameState.Playing)
             return;
 
+        if (isFirstEnemy) 
+        {
+            isFirstEnemy = false;
+            SpawnEnemy();
+            currentTime = 0;
+            return;
+        }
+
         currentTime += Time.deltaTime;
-        float generationInterval = 1f / generationRate / gamePlayManager.CurrentSpeed;
+
+        float generationRate = initialSpawningRate * gamePlayManager.CurrentSpeed;
+        float generationInterval = 1f / generationRate;
 
         if (currentTime >= generationInterval)
         {
