@@ -15,7 +15,8 @@ public class Pickup : MonoBehaviour
     [SerializeField]
     float lifespan = 10;
 
-    
+    float timeAlive = 0;
+    float spriteStartingScale;
     Rigidbody2D body;
     protected ProjectileManager projectileManager;
     protected bool triggered = false;
@@ -32,7 +33,7 @@ public class Pickup : MonoBehaviour
     {
         body = GetComponent<Rigidbody2D>();
         fadeInTween = sprite.DOFade(0, 0).OnComplete(()=> sprite.DOFade(1, 1f));
-        
+        spriteStartingScale = sprite.transform.localScale.x;
         Invoke("OnLifespanOver", lifespan);
     }
 
@@ -41,10 +42,10 @@ public class Pickup : MonoBehaviour
     private void Update()
     {
         sprite.transform.Rotate(0,0,Time.deltaTime * 60);
-
+        timeAlive += Time.deltaTime;
         if (!triggered)
         {
-            sprite.transform.localScale += Vector3.one * Mathf.Sin(Time.time *3f)*.0003f;
+            sprite.transform.localScale = Vector3.one * (spriteStartingScale + Mathf.Sin(timeAlive * 3f)*.1f);
         }
         
     }

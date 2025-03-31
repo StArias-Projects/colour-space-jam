@@ -72,6 +72,11 @@ public class ProjectileController : MonoBehaviour
 
     public virtual void ShootProjectile(Vector2 pos, Vector2 dir, EnemyType type)
     {
+        if(type == EnemyType.None)
+        {
+            isBounced = true;
+        }
+        
         transform.position = pos;
         gameObject.SetActive(true);
         projDir = dir;

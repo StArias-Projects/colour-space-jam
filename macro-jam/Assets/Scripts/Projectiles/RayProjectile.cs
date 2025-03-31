@@ -45,20 +45,22 @@ public class RayProjectile : ProjectileController
             lineRenderer.SetPosition(1, shieldPos);
             lineRenderer.SetPosition(2, shieldPos + shield.transform.up * 100);
 
-            mask = LayerMask.GetMask("Enemy", "Default");
-            raycastHit = Physics2D.Raycast(shieldPos, shield.transform.up, 100, mask, -1);
+            mask = LayerMask.GetMask("Enemy");
+            raycastHit = Physics2D.CircleCast(shieldPos,.5f, shield.transform.up, 100, mask, -1);
+
             if (raycastHit && raycastHit.collider.TryGetComponent(out EnemyController enemy))
             {
                 enemy.ReceiveDamage(attackPower);
                 TriggerOnBulletDetonated(raycastHit.point);
                 lineRenderer.SetPosition(2, enemy.transform.position);
             }
-            else if (raycastHit && raycastHit.collider.TryGetComponent(out FractureCrystal crystal))
-            {
-                crystal.OnHit(true);
-                TriggerOnBulletDetonated(raycastHit.point);
-                lineRenderer.SetPosition(2, crystal.transform.position);
-            }
+            //to do this we would need to check every collider on path rather than just the first hit
+            //else if (raycastHit && raycastHit.collider.TryGetComponent(out FractureCrystal crystal))
+            //{
+            //    crystal.OnHit(true);
+            //    TriggerOnBulletDetonated(raycastHit.point);
+            //    lineRenderer.SetPosition(2, crystal.transform.position);
+            //}
 
             return;
         }

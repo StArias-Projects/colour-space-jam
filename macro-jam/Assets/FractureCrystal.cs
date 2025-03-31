@@ -14,9 +14,13 @@ public class FractureCrystal : Pickup
         if (triggered) return;
         if (byRay)
         {
+            numberOfFractures *= 3;
+        }
+        else
+        {
             numberOfFractures *= 2;
         }
-        Trigger(null);
+            Trigger(null);
     }
 
     protected override void Trigger(PlayerManager player)
