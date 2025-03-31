@@ -81,8 +81,7 @@ public class GameManager : MonoBehaviour
     /// </summary>
     private void LoadFirstScene()
     {
-        if (cursorManager)
-            StartCoroutine(cursorManager.ChangeCursorTexture(GameState.Opening));
+        StartCoroutine(CursorManager.ChangeCursorTexture(GameState.Opening));
 
         switch (initialScene)
         {
@@ -119,10 +118,7 @@ public class GameManager : MonoBehaviour
 
     public void ChangeCursorTexture(GameState state)
     {
-        if (!cursorManager)
-            return;
-
-        StartCoroutine(cursorManager.ChangeCursorTexture(state));
+        StartCoroutine(CursorManager.ChangeCursorTexture(state));
     }
 
     public void QuitGame()
