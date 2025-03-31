@@ -121,13 +121,7 @@ public class ShieldController : MonoBehaviour
 
     public void ResetShields() 
     {
-        int i = 0;
-        foreach (var shield in shields) 
-        {
-            shield.transform.position = originalPos[i];
-            shield.transform.rotation = originalRotation[i];
-            i++;
-        }
+        RotateShields();
     }
 }
 
