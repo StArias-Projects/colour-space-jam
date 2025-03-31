@@ -89,7 +89,8 @@ public class PlayerManager : MonoBehaviour
     public void ReceiveDamage(float damage)
     {
         health -= damage;
-        bool isLowHealth = health <= health * heartBeatHealthThreshHold;
+        bool isLowHealth = health <= maxHealth * heartBeatHealthThreshHold;
+
         if (isLowHealth)
             playerSFXController.PlayHeartBeat();
 
@@ -109,7 +110,8 @@ public class PlayerManager : MonoBehaviour
     {
         health += amount;
         health = Mathf.Min(health, maxHealth);
-        bool isNotLowHealth = health > health * heartBeatHealthThreshHold;
+        bool isNotLowHealth = health > maxHealth * heartBeatHealthThreshHold;
+
         if (isNotLowHealth)
             playerSFXController.StopHeartBeat();
 

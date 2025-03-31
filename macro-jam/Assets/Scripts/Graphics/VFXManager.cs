@@ -42,7 +42,6 @@ public class VFXManager : MonoBehaviour
         //might be worth pooling this at some point
         spawnedVisualEffect.Play();
         Destroy(spawnedVisualEffect, 5.0f);
-        print("spawning");
 
     }
 
