@@ -35,12 +35,14 @@ public class EnemyWeaponController : MonoBehaviour
     private EnemyController enemyController;
     private ProjectileManager projectileManager;
     private int shotsInBustSoFar = 0;
+    private EnemySFX sfxController;
 
     #region Set Up
 
-    public void SetUpWeapon(EnemyController enemyC, ProjectileManager projManager, Transform target)
+    public void SetUpWeapon(EnemyController enemyC, ProjectileManager projManager, EnemySFX sfx, Transform target)
     {
         enemyController = enemyC;
+        sfxController = sfx;
         IsShooting = false;
         targetTr = target;
         projectileManager = projManager;

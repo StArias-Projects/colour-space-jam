@@ -8,7 +8,6 @@ public enum EnemyType
     None,
     Blue,
     Red,
-   
 }
 
 public class EnemyManager : MonoBehaviour

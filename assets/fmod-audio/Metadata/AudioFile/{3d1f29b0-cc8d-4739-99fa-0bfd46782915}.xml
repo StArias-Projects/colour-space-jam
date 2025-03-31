@@ -2,7 +2,7 @@
 <objects serializationModel="Studio.02.03.00">
 	<object class="AudioFile" id="{3d1f29b0-cc8d-4739-99fa-0bfd46782915}">
 		<property name="assetPath">
-			<value>Hit.wav</value>
+			<value>GamePlaySFX/Projectiles/Bullet3.wav</value>
 		</property>
 		<property name="frequencyInKHz">
 			<value>22.0499992</value>

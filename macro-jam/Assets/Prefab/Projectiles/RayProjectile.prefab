@@ -1,5 +1,68 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &515730150710461348
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3025510865205802173}
+  - component: {fileID: 5602464920906735421}
+  m_Layer: 7
+  m_Name: ShotSFX
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3025510865205802173
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 515730150710461348}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8400773782078530196}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5602464920906735421
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 515730150710461348}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CollisionTag: 
+  EventReference:
+    Guid:
+      Data1: 220337204
+      Data2: 1209794857
+      Data3: 2026877091
+      Data4: 1320066596
+    Path: event:/GamePlaySFX/Projectiles/LaserShot
+  Event: 
+  EventPlayTrigger: 0
+  EventStopTrigger: 0
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  NonRigidbodyVelocity: 0
+  Params: []
+  OverrideAttenuation: 0
+  OverrideMinDistance: 1
+  OverrideMaxDistance: 20
 --- !u!1 &1243130572400143991
 GameObject:
   m_ObjectHideFlags: 0
@@ -150,6 +213,7 @@ GameObject:
   - component: {fileID: 8400773782078530196}
   - component: {fileID: 2984203052763698829}
   - component: {fileID: 5715583339131039679}
+  - component: {fileID: 7713446011929685102}
   m_Layer: 7
   m_Name: RayProjectile
   m_TagString: Untagged
@@ -171,6 +235,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 8617010763394697626}
+  - {fileID: 3025510865205802173}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2984203052763698829
@@ -185,6 +250,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7b2315c80f9fb4943962ce26e5e73be2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sfxController: {fileID: 7713446011929685102}
   rigidBody: {fileID: 5715583339131039679}
   maxLifeTime: 0.3
   attackPower: 1
@@ -224,3 +290,17 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
+--- !u!114 &7713446011929685102
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5564536802197427886}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e10b97f8b8156a7478f8fc86906b6e8a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  shotEmitter: {fileID: 5602464920906735421}
+  bulletDestroyed: {fileID: 0}

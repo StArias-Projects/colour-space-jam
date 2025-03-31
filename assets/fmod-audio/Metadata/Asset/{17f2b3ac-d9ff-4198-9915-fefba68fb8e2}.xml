@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.03.00">
+	<object class="EncodableAsset" id="{17f2b3ac-d9ff-4198-9915-fefba68fb8e2}">
+		<property name="assetPath">
+			<value>GamePlaySFX/Projectiles/</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{fa104b0c-6d32-41b2-ba20-de4b98c1860b}</destination>
+		</relationship>
+	</object>
+</objects>

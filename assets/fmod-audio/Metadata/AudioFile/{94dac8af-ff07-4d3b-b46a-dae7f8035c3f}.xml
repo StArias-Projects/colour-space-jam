@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.03.00">
+	<object class="AudioFile" id="{94dac8af-ff07-4d3b-b46a-dae7f8035c3f}">
+		<property name="assetPath">
+			<value>GamePlaySFX/Enemies/EnemySpawn2.mp3</value>
+		</property>
+		<property name="frequencyInKHz">
+			<value>48</value>
+		</property>
+		<property name="channelCount">
+			<value>2</value>
+		</property>
+		<property name="length">
+			<value>0.35999999999999999</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{fa104b0c-6d32-41b2-ba20-de4b98c1860b}</destination>
+		</relationship>
+	</object>
+</objects>

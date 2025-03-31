@@ -47,6 +47,7 @@ public class SquareProjectileController : ProjectileController
             isBounced = true;
 
             ProjectileBounceEffect();
+            shieldHit.PlayShieldBulletReflected();
             TriggerOnProjectileReflected();
 
             float angle = Mathf.Atan2(shieldHit.transform.up.y, shieldHit.transform.up.x) * Mathf.Rad2Deg;

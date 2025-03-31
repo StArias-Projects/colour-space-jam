@@ -13,6 +13,9 @@ public class PlayerManager : MonoBehaviour
 
     [SerializeField]
     private ShieldController shieldController;
+    
+    [SerializeField]
+    private PlayerSFXController playerSFXController;
 
     private float health = 0;
     private GamePlayManager gamePlayManager;
@@ -30,8 +33,10 @@ public class PlayerManager : MonoBehaviour
         initialScale = transform.localScale;
 
         gamePlayManager = gpManager;
-        playerController.SetUp(this);
-        shieldController.SetUp(this);
+        playerController.SetUp(this, playerSFXController);
+        shieldController.SetUp(this, playerSFXController);
+
+        playerSFXController.PlaySpawnPlayer();
     }
 
     private void OnEnable()
@@ -104,6 +109,7 @@ public class PlayerManager : MonoBehaviour
 
     public void StartDeathAnimation()
     {
+        playerSFXController.PlayPlayerDeathSFX();
         transform.DOScale(Vector3.zero, 1f).OnComplete(FinishDeathAnimation);
     }
 
@@ -114,6 +120,7 @@ public class PlayerManager : MonoBehaviour
 
     public void ResetPlayer()
     {
+        playerSFXController.PlaySpawnPlayer();
         isDeathFinished = false;
         health = maxHealth;
         transform.SetPositionAndRotation(initialPos, initialRotation);

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.03.00">
+	<object class="AudioFile" id="{a9158ec6-b2bd-40b0-90a2-df443355ed07}">
+		<property name="assetPath">
+			<value>GamePlaySFX/Projectiles/LaserGun3.mp3</value>
+		</property>
+		<property name="frequencyInKHz">
+			<value>44.0999985</value>
+		</property>
+		<property name="channelCount">
+			<value>2</value>
+		</property>
+		<property name="length">
+			<value>0.52244897959183678</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{fa104b0c-6d32-41b2-ba20-de4b98c1860b}</destination>
+		</relationship>
+	</object>
+</objects>

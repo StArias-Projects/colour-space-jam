@@ -16,6 +16,9 @@ public class EnemyController : MonoBehaviour
     private EnemyWeaponController weaponController;
 
     [SerializeField]
+    private EnemySFX sfxController;
+
+    [SerializeField]
     private SpriteRenderer sprite;
 
     [SerializeField]
@@ -37,7 +40,7 @@ public class EnemyController : MonoBehaviour
 
     [SerializeField]
     private LayerMask shieldMask;
-    
+
     [SerializeField]
     private LayerMask boundaryMask;
 
@@ -74,7 +77,7 @@ public class EnemyController : MonoBehaviour
         enemyType = enemyColor;
         target = targetTr;
         SetUpDirectionPoints(dirPoints);
-        weaponController.SetUpWeapon(this, projManager, targetTr);
+        weaponController.SetUpWeapon(this, projManager, sfxController, targetTr);
         sprite.color = enemyManager.GetEnemyColor(enemyType);
     }
 
@@ -119,7 +122,7 @@ public class EnemyController : MonoBehaviour
         }
     }
 
-    private void RotateTowardsTarget(float rotateSpeedMultiplier =1f)
+    private void RotateTowardsTarget(float rotateSpeedMultiplier = 1f)
     {
         if (rotateTowardsTargetSpeed == 0) return;
         Vector2 directionToPlayer = (target.transform.position - transform.position).normalized;
@@ -172,6 +175,7 @@ public class EnemyController : MonoBehaviour
         if (health <= 0)
         {
             health = 0;
+            sfxController.PlayDeathSFX();
             StartCoroutine(EnemyDeath(.5f));
 
             return true;
@@ -200,7 +204,8 @@ public class EnemyController : MonoBehaviour
         transform.position = position;
         ChangeMovementDirection();
 
-        sprite.DOFade(0, 0).OnComplete(()=> sprite.DOFade(1, 1));
+        sprite.DOFade(0, 0).OnComplete(() => sprite.DOFade(1, 1));
+        sfxController.PlaySpawnSFX();
     }
 
     public void OnGameOver()
@@ -216,13 +221,13 @@ public class EnemyController : MonoBehaviour
         return isDead;
     }
 
-    private void OnGamePaused() 
+    private void OnGamePaused()
     {
         velocityBeforePause = rigidBody.linearVelocity;
         rigidBody.linearVelocity = Vector2.zero;
     }
 
-    private void OnGameContinued() 
+    private void OnGameContinued()
     {
         rigidBody.linearVelocity = velocityBeforePause;
     }

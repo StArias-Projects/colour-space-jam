@@ -68,6 +68,9 @@ public class GamePlayManager : MonoBehaviour
     private GameState gameState = GameState.Opening;
     private Stats gameStats;
     private GameManager gameManager;
+    private AudioManager audioManager;
+    private Coroutine musicFadeInCoroutine = null;
+    private Coroutine musicFadeOutCoroutine = null;
 
     public static event Action OnGameOver;
     public static event Action OnGamePaused;
@@ -92,6 +95,8 @@ public class GamePlayManager : MonoBehaviour
     public void SetUp()
     {
         gameManager = GameManager.GetInstance();
+        audioManager = AudioManager.GetInstance();
+
         gameStats.enemiesKilled = new();
         currentSpeed = minGamePlaySpeed;
 
@@ -113,8 +118,7 @@ public class GamePlayManager : MonoBehaviour
         gameManager.ChangeCursorTexture(gameState);
         currentSpeed = minGamePlaySpeed;
 
-        gamePlayMusicEmitter.Play();
-        pauseMusicEmitter.Stop();
+        musicFadeInCoroutine = StartCoroutine(AudioManager.MusicFadeIn(gamePlayMusicEmitter, false, 1f));
     }
 
     public IEnumerator GameOver()
@@ -130,9 +134,8 @@ public class GamePlayManager : MonoBehaviour
 
         yield return new WaitUntil(() => playerManager.IsDeathAnimationFinished());
 
-        gamePlayMusicEmitter.Stop();
         pauseMusicEmitter.Stop();
-        gameOverMusicEmitter.Play();
+        HandleMusicFadeInFadeOut(gameOverMusicEmitter, false, 3f, gamePlayMusicEmitter, false, 0.5f);
 
         gameOverManager.GameOver(gameStats);
     }
@@ -145,9 +148,8 @@ public class GamePlayManager : MonoBehaviour
         gameState = GameState.Playing;
         gameManager.ChangeCursorTexture(gameState);
 
-        gamePlayMusicEmitter.Stop();
         pauseMusicEmitter.Stop();
-        gameOverMusicEmitter.Play();
+        HandleMusicFadeInFadeOut(gamePlayMusicEmitter, false, 1f, gameOverMusicEmitter, false, 1f);
 
         playerManager.ResetPlayer();
         hudManager.ResetHUD(playerManager.GetMaxHealth());
@@ -155,6 +157,11 @@ public class GamePlayManager : MonoBehaviour
 
     public void ReturnToMainMenu()
     {
+        if(musicFadeInCoroutine != null)
+            StopCoroutine(musicFadeInCoroutine);
+        if(musicFadeOutCoroutine != null)
+            StopCoroutine(musicFadeOutCoroutine);
+
         gamePlayMusicEmitter.Stop();
         pauseMusicEmitter.Stop();
         gameOverMusicEmitter.Stop();
@@ -168,8 +175,8 @@ public class GamePlayManager : MonoBehaviour
         gameState = GameState.Pause;
         gameManager.ChangeCursorTexture(gameState);
 
-        gamePlayMusicEmitter.EventInstance.setPaused(true);
-        pauseMusicEmitter.Play();
+        HandleMusicFadeInFadeOut(pauseMusicEmitter, false, 2f, gamePlayMusicEmitter, true, 1f);
+
         Time.timeScale = 0;
         OnGamePaused?.Invoke();
     }
@@ -179,8 +186,8 @@ public class GamePlayManager : MonoBehaviour
         gameState = GameState.Playing;
         gameManager.ChangeCursorTexture(gameState);
 
-        gamePlayMusicEmitter.EventInstance.setPaused(false);
-        pauseMusicEmitter.Stop();
+        HandleMusicFadeInFadeOut(gamePlayMusicEmitter, true, 1f, pauseMusicEmitter, false, 1f);
+
         Time.timeScale = 1;
         OnGameContinued?.Invoke();
     }
@@ -243,6 +250,22 @@ public class GamePlayManager : MonoBehaviour
             gameStats.enemiesKilled[enemyType]++;
         else
             gameStats.enemiesKilled.Add(enemyType, 1);
+    }
+
+    #endregion
+
+    #region Misc
+
+    private void HandleMusicFadeInFadeOut(StudioEventEmitter musicIn, bool isContinued, float fadeInSeconds, 
+                                            StudioEventEmitter musicOut, bool isPaused, float fadeOutSeconds) 
+    {
+        if (musicFadeInCoroutine != null)
+            StopCoroutine(musicFadeInCoroutine);
+        musicFadeInCoroutine = StartCoroutine(AudioManager.MusicFadeIn(musicIn, isContinued, fadeInSeconds));
+
+        if (musicFadeOutCoroutine != null)
+            StopCoroutine(musicFadeOutCoroutine);
+        musicFadeOutCoroutine =StartCoroutine(AudioManager.MusicFadeOut(musicOut, isPaused, fadeOutSeconds));
     }
 
     #endregion

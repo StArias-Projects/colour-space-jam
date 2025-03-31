@@ -98,8 +98,9 @@ GameObject:
   m_Component:
   - component: {fileID: 3842573797170238595}
   - component: {fileID: 4993525481252309011}
-  - component: {fileID: 2168393888267659187}
   - component: {fileID: 2401270555133149470}
+  - component: {fileID: 6915311959560558971}
+  - component: {fileID: 2168393888267659187}
   - component: {fileID: 8764160480298527094}
   m_Layer: 6
   m_Name: SmallTriangleEnemy
@@ -122,6 +123,8 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4545891041647150810}
+  - {fileID: 3061247491742800565}
+  - {fileID: 2785628783588354147}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &4993525481252309011
@@ -137,6 +140,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weaponController: {fileID: 2401270555133149470}
+  sfxController: {fileID: 6915311959560558971}
   sprite: {fileID: 6135199985225050661}
   shadowSprite: {fileID: 6476879393246805736}
   maxHealth: 1
@@ -152,6 +156,39 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 1024
   rotateTowardsTargetSpeed: 5
+--- !u!114 &2401270555133149470
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2970768838259694941}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f46016a28e933646a9a1102716e2d57, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  fireRate: 0.3
+  shotsInBurst: 1
+  secondsBetweenShotsInBurst: 0.1
+  fireInForwardDirection: 1
+  secondsOfChargeTimeBeforeShot: 1
+  projectileThisShoots: 1
+--- !u!114 &6915311959560558971
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2970768838259694941}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fc65bc92ec0dc7c49ae7893630f6c1fa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  shotEmitter: {fileID: 0}
+  spawnEmitter: {fileID: 3396499014081979098}
+  deathEmitter: {fileID: 2824273600857093393}
 --- !u!50 &2168393888267659187
 Rigidbody2D:
   serializedVersion: 5
@@ -179,24 +216,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!114 &2401270555133149470
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2970768838259694941}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9f46016a28e933646a9a1102716e2d57, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  fireRate: 0.3
-  shotsInBurst: 1
-  secondsBetweenShotsInBurst: 0.1
-  fireInForwardDirection: 1
-  secondsOfChargeTimeBeforeShot: 1
-  projectileThisShoots: 1
 --- !u!60 &8764160480298527094
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -250,6 +269,132 @@ PolygonCollider2D:
       - {x: 0.1675376, y: -0.17663515}
       - {x: 0.36435038, y: 0.04170458}
   m_UseDelaunayMesh: 0
+--- !u!1 &4260056085076869066
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3061247491742800565}
+  - component: {fileID: 3396499014081979098}
+  m_Layer: 6
+  m_Name: SpawnSFX
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3061247491742800565
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4260056085076869066}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3842573797170238595}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3396499014081979098
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4260056085076869066}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CollisionTag: 
+  EventReference:
+    Guid:
+      Data1: -395424527
+      Data2: 1125978377
+      Data3: 1282777751
+      Data4: -1643197657
+    Path: event:/GamePlaySFX/Enemy/SpawnEnemy
+  Event: 
+  EventPlayTrigger: 0
+  EventStopTrigger: 0
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  NonRigidbodyVelocity: 0
+  Params: []
+  OverrideAttenuation: 0
+  OverrideMinDistance: 1
+  OverrideMaxDistance: 20
+--- !u!1 &7583195407258084523
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2785628783588354147}
+  - component: {fileID: 2824273600857093393}
+  m_Layer: 6
+  m_Name: DeathSFX
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2785628783588354147
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7583195407258084523}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3842573797170238595}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2824273600857093393
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7583195407258084523}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CollisionTag: 
+  EventReference:
+    Guid:
+      Data1: -1384899469
+      Data2: 1080898470
+      Data3: 2014220957
+      Data4: 2025977853
+    Path: event:/GamePlaySFX/Enemy/EnemyDie
+  Event: 
+  EventPlayTrigger: 0
+  EventStopTrigger: 0
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  NonRigidbodyVelocity: 0
+  Params: []
+  OverrideAttenuation: 0
+  OverrideMinDistance: 1
+  OverrideMaxDistance: 20
 --- !u!1001 &6384034381797380579
 PrefabInstance:
   m_ObjectHideFlags: 0

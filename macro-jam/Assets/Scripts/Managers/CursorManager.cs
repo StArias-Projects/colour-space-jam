@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class CursorManager : MonoBehaviour
@@ -30,8 +31,10 @@ public class CursorManager : MonoBehaviour
         }
     }
 
-    public void ChangeCursorTexture(GameState gameState)
+    public IEnumerator ChangeCursorTexture(GameState gameState)
     {
+        yield return new WaitUntil(() => Instance);
+
         this.gameState = gameState;
         Texture2D newCursor = null;
 

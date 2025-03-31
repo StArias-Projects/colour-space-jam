@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.03.00">
+	<object class="AudioFile" id="{c56a6489-08fc-4275-8a2b-a2b766584205}">
+		<property name="assetPath">
+			<value>GamePlaySFX/Objects/pickupExpired.mp3</value>
+		</property>
+		<property name="frequencyInKHz">
+			<value>24</value>
+		</property>
+		<property name="channelCount">
+			<value>2</value>
+		</property>
+		<property name="length">
+			<value>0.45600000000000002</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{fa104b0c-6d32-41b2-ba20-de4b98c1860b}</destination>
+		</relationship>
+	</object>
+</objects>

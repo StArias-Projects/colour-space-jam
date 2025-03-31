@@ -5,6 +5,9 @@ using UnityEngine.UI;
 public class ProjectileController : MonoBehaviour
 {
     [SerializeField]
+    protected ProjectileSFXController sfxController;
+    
+    [SerializeField]
     protected Rigidbody2D rigidBody;
 
     [SerializeField]
@@ -85,6 +88,7 @@ public class ProjectileController : MonoBehaviour
         EnemyColor = type;
         float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
         OnBulletFired.Invoke(transform.position, Quaternion.Euler(0,0, angle), type);
+        sfxController.PlayShotSFX();
     }
 
     private void OnGameOver()
@@ -102,6 +106,7 @@ public class ProjectileController : MonoBehaviour
     
     protected void TriggerOnBulletDetonated(Vector3 explosionPos)
     {
+        sfxController.PlayProjectileDestroyed();
         OnBulletDetonated?.Invoke(explosionPos, EnemyColor);
     }
  

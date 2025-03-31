@@ -1,4 +1,5 @@
 using FMODUnity;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -21,12 +22,12 @@ public class AudioManager : MonoBehaviour
     private static float musicVolume;
     private static float sfxVolume;
 
-    public AudioManager GetInstance()
+    public static AudioManager GetInstance()
     {
         return Instance;
     }
 
-    private void Awake()
+    public void Awake()
     {
         if (Instance)
         {
@@ -74,6 +75,65 @@ public class AudioManager : MonoBehaviour
                 sfxVolume = value;
                 sfxBus.setVolume(sfxVolume);
             });
+        }
+    }
+
+    public static IEnumerator MusicFadeOut(StudioEventEmitter emitter, bool isPaused, float durationInSeconds)
+    {
+        yield return new WaitUntil(() => Instance);
+
+        float startVolume = musicVolume;
+        float elapsedTime = 0f;
+
+        while (elapsedTime < durationInSeconds)
+        {
+            elapsedTime += Time.unscaledDeltaTime;
+            float newVolume = Mathf.Lerp(startVolume, 0f, elapsedTime / durationInSeconds);
+
+            if (!emitter)
+                elapsedTime = durationInSeconds + 1;
+
+            emitter.SetParameter("volume", Mathf.Max(newVolume, 0));
+            yield return null;
+        }
+
+        if (emitter)
+        {
+            emitter.SetParameter("volume", 0f);
+            if (isPaused)
+                emitter.EventInstance.setPaused(true);
+            else
+                emitter.Stop();
+        }
+    }
+
+    public static IEnumerator MusicFadeIn(StudioEventEmitter emitter, bool isContinued, float durationInSeconds)
+    {
+        yield return new WaitUntil(() => Instance);
+
+        if (isContinued)
+            emitter.EventInstance.setPaused(false);
+        else
+            emitter.Play();
+
+        emitter.SetParameter("volume", 0);
+        float startVolume = 0f;
+        float elapsedTime = 0f;
+
+        while (elapsedTime < durationInSeconds)
+        {
+            elapsedTime += Time.unscaledDeltaTime;
+            float newVolume = Mathf.Lerp(startVolume, musicVolume, elapsedTime / durationInSeconds);
+            if (!emitter)
+                elapsedTime = durationInSeconds + 1;
+
+            emitter.SetParameter("volume", Mathf.Min(newVolume, musicVolume));
+            yield return null;
+        }
+
+        if (emitter)
+        {
+            emitter.SetParameter("volume", musicVolume);
         }
     }
 }

@@ -20,10 +20,17 @@ public class ShieldController : MonoBehaviour
     private Transform clickRotator;
 
     private PlayerManager _player;
+    private PlayerSFXController playerSFXController;
 
-    public void SetUp(PlayerManager player)
+    public void SetUp(PlayerManager player, PlayerSFXController controller)
     {
         _player = player;
+        playerSFXController = controller;
+        int i = 0;
+        foreach (var shield in shields) 
+        {
+            shield.SetUp(playerSFXController, i);
+        }
     }
 
     private void Start()
@@ -59,6 +66,7 @@ public class ShieldController : MonoBehaviour
             return;
 
         Rotate(false);
+        playerSFXController.PlaySwapShieldSFX();
     }
 
     public void OnRightClick(CallbackContext context)
@@ -67,6 +75,7 @@ public class ShieldController : MonoBehaviour
             return;
 
         Rotate(true);
+        playerSFXController.PlaySwapShieldSFX();
     }
 
     private void Rotate(bool left)
@@ -104,7 +113,6 @@ public class ShieldController : MonoBehaviour
                 shields[i].ToggleAsMainShield(false, secondsToRotateShieldsOnClick);
             }
         }
-
     }
 }
 
