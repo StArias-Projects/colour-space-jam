@@ -174,6 +174,8 @@ public class EnemyManager : MonoBehaviour
 
     public void GameOver()
     {
+        isFirstEnemy = true;
+        currentTime = 0;
         OnGameOver?.Invoke();
     }
 

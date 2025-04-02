@@ -144,6 +144,7 @@ public class GamePlayManager : MonoBehaviour
     {
         gameManager.InitStats();
         currentGameTime = 0;
+        currentSpeed = minGamePlaySpeed;
         gameStats = gameManager.GetGamestats();
         gameState = GameState.Playing;
         gameManager.ChangeCursorTexture(gameState);
