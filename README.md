@@ -16,7 +16,7 @@ You will be able to look at your stats at the end of the game and try another ro
             </td>
             <td style="text-align:left;">
                 <ul>
-                    <li>Released -> <a href="https://orphic-dreaming.itch.io/colour-space">Click here to try</a>
+                    <li>Released -> <a href="https://orphic-dreaming.itch.io/colour-space" target="_blank">Click here to try</a>
                 </ul>
             </td>
             <tr>
